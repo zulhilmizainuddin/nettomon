@@ -9,15 +9,15 @@ using namespace std;
 
 class ProcFd {
 private:
-    const char* pid;
+    string pid;
 public:
-    ProcFd(const char *pid) : pid(pid) { }
+    ProcFd(string pid) : pid(pid) { }
 
-    vector<const char *> getSocketsInode();
+    vector<string> getSocketsInode();
 
-public:
-    vector<const char *> getSymlinksContent();
-    vector<const char *> extractSocketInodes(vector<const char *> symlinksContent);
+private:
+    vector<string> getSymlinksContent();
+    vector<string> extractSocketInodes(vector<string> symlinksContent);
 };
 
 
