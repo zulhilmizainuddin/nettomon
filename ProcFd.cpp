@@ -15,6 +15,8 @@ vector<string> ProcFd::getSymlinksContent() {
 
     DIR* directory = opendir(directoryName.c_str());
     if (directory == NULL) {
+        string error = directoryName + " does not exist";
+        perror(error.c_str());
         exit(1);
     }
 

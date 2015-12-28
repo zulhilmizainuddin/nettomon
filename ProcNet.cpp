@@ -18,7 +18,7 @@ vector<string> ProcNet::getIpTypeData() {
     vector<string> ipTypeDataList;
 
     while (getline(file, store)) {
-        auto header("sl  local_address rem_address   st tx_queue rx_queue tr tm->when retrnsmt   uid  timeout inode");
+        string header("sl  local_address rem_address   st tx_queue rx_queue tr tm->when retrnsmt   uid  timeout inode");
         if (store.find(header) == string::npos) {
             auto first = store.find_first_not_of(" ");
             auto last = store.find_last_not_of(" ");
