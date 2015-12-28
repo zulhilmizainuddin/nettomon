@@ -3,7 +3,6 @@
 
 #include <fstream>
 #include <vector>
-#include <dirent.h>
 
 using namespace std;
 
@@ -13,11 +12,11 @@ private:
 public:
     ProcFd(string pid) : pid(pid) { }
 
-    vector<string> getSocketsInode();
+    vector<string> getSocketInodeList();
 
 private:
     vector<string> getSymlinksContent();
-    vector<string> extractSocketInodes(vector<string> symlinksContent);
+    vector<string> extractSocketsInode(vector<string> symlinkContentList);
 };
 
 

@@ -1,12 +1,13 @@
 #include <unistd.h>
 #include <regex>
+#include <dirent.h>
 #include "ProcFd.h"
 
-vector<string> ProcFd::getSocketsInode() {
-    vector<string> symLinksContent = getSymlinksContent();
-    vector<string> socketInodes = extractSocketInodes(symLinksContent);
+vector<string> ProcFd::getSocketInodeList() {
+    auto symLinksContent = getSymlinksContent();
+    auto socketInodeList = extractSocketsInode(symLinksContent);
 
-    return socketInodes;
+    return socketInodeList;
 }
 
 vector<string> ProcFd::getSymlinksContent() {
@@ -18,7 +19,7 @@ vector<string> ProcFd::getSymlinksContent() {
     }
 
     struct dirent* symlink;
-    vector<string> symlinksContent;
+    vector<string> symlinkContentList;
 
     while (symlink = readdir(directory)) {
         string symlinkName = "/proc/" + pid + "/fd/" + symlink->d_name;
@@ -26,26 +27,26 @@ vector<string> ProcFd::getSymlinksContent() {
         char symlinkContent[BUFSIZ];
         readlink(symlinkName.c_str(), symlinkContent, sizeof(symlinkContent));
 
-        symlinksContent.push_back(strdup(symlinkContent));
+        symlinkContentList.push_back(strdup(symlinkContent));
     }
 
     closedir(directory);
 
-    return symlinksContent;
+    return symlinkContentList;
 }
 
-vector<string> ProcFd::extractSocketInodes(vector<string> symlinksContent) {
+vector<string> ProcFd::extractSocketsInode(vector<string> symlinkContentList) {
 
-    vector<string> socketInodes;
+    vector<string> socketInodeList;
 
-    for_each(symlinksContent.begin(), symlinksContent.end(), [&](string symlinkContent) {
+    for_each(symlinkContentList.begin(), symlinkContentList.end(), [&](string symlinkContent) {
         regex socketInodeRegex("socket:\\[([0-9]+)\\]");
         smatch match;
 
         if (regex_search(symlinkContent, match, socketInodeRegex)) {
-            socketInodes.push_back(match[1].str().c_str());
+            socketInodeList.push_back(match[1].str().c_str());
         }
     });
 
-    return socketInodes;
+    return socketInodeList;
 }
