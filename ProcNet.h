@@ -4,15 +4,9 @@
 #include <string>
 #include <map>
 #include <vector>
+#include "NetData.h"
 
 using namespace std;
-
-struct NetData {
-    string localIp;
-    string localPort;
-    string remoteIp;
-    string remotePort;
-};
 
 class ProcNet {
 private:
@@ -21,11 +15,11 @@ private:
 public:
     ProcNet(string ipType) : ipType(ipType) { }
 
-    vector<map<string, NetData>> getInodesIpMapList();
+    map<string, NetData> getInodesIpMap();
 
 private:
     vector<string> getIpTypeData();
-    vector<map<string, NetData>> extractInodesIpMapping(vector<string> ipTypeDataList);
+    map<string, NetData> extractInodesIpMapping(vector<string> ipTypeDataList);
 };
 
 

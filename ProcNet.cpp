@@ -3,7 +3,7 @@
 #include <regex>
 #include "ProcNet.h"
 
-vector<map<string, NetData>> ProcNet::getInodesIpMapList() {
+map<string, NetData> ProcNet::getInodesIpMap() {
     auto ipTypeData = getIpTypeData();
     auto inodeIpMapList = extractInodesIpMapping(ipTypeData);
 
@@ -30,8 +30,8 @@ vector<string> ProcNet::getIpTypeData() {
     return ipTypeDataList;
 }
 
-vector<map<string, NetData>> ProcNet::extractInodesIpMapping(vector<string> ipTypeDataList) {
-    vector<map<string, NetData>> inodesIpMapList;
+map<string, NetData> ProcNet::extractInodesIpMapping(vector<string> ipTypeDataList) {
+    map<string, NetData> inodesIpMap;
 
     for_each(ipTypeDataList.begin(), ipTypeDataList.end(), [&](string ipTypeData) {
         regex ipTypeDataRegex("^\\d+:\\s+([0-9A-Z]+):([0-9A-Z]+)\\s+([0-9A-Z]+):([0-9A-Z]+)(?:\\s+.+?){6}\\s+([0-9]+)");
@@ -46,12 +46,9 @@ vector<map<string, NetData>> ProcNet::extractInodesIpMapping(vector<string> ipTy
                     match[4].str().c_str()
             };
 
-            map<string, NetData> inodesIpMap;
             inodesIpMap[match[5].str().c_str()] = netData;
-
-            inodesIpMapList.push_back(inodesIpMap);
         }
     });
 
-    return inodesIpMapList;
+    return inodesIpMap;
 }
