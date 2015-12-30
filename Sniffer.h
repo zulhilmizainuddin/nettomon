@@ -12,9 +12,6 @@ public:
     Sniffer(const vector<NetData> &tcpNetData, const vector<NetData> &udpNetData);
 
     void sniff();
-
-private:
-    string retrieveListeningDeviceName();
 };
 
 

@@ -16,9 +16,15 @@ Sniffer::Sniffer(const vector<NetData> &tcpNetData, const vector<NetData> &udpNe
 }
 
 void Sniffer::sniff() {
-    auto deviceName = retrieveListeningDeviceName();
-
     char errbuf[PCAP_ERRBUF_SIZE];
+
+    string deviceName = pcap_lookupdev(errbuf);
+
+    if (deviceName.empty()) {
+        perror("Failed to get device to sniff on");
+        exit(1);
+    }
+
     pcap_t* packetDescriptor = pcap_open_live(deviceName.c_str(), BUFSIZ, 0, -1, errbuf);
 
     if (packetDescriptor == NULL) {
@@ -44,26 +50,4 @@ void Sniffer::sniff() {
         }
 
     }, NULL);
-}
-
-string Sniffer::retrieveListeningDeviceName() {
-    char error[PCAP_ERRBUF_SIZE];
-    char* deviceName = pcap_lookupdev(error);
-
-    if (deviceName == NULL) {
-        perror("Failed to get device to sniff on");
-        exit(1);
-    }
-
-    bpf_u_int32 networkAddress;
-    bpf_u_int32 subnetMask;
-
-    int returnValue = pcap_lookupnet(deviceName, &networkAddress, &subnetMask, error);
-
-    if (returnValue == -1) {
-        perror("Failed to get network address/subnet mask");
-        exit(1);
-    }
-
-    return deviceName;
 }
