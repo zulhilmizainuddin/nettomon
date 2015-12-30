@@ -1,13 +1,52 @@
 #include <pcap/pcap.h>
-#include <sys/socket.h>
-#include <string.h>
-#include <sys/ioctl.h>
-#include <unistd.h>
 #include <arpa/inet.h>
-#include <net/if.h>
+#include <netinet/ether.h>
+#include <netinet/ip.h>
+#include <iostream>
+#include "TcpProcessor.h"
+#include "UdpProcessor.h"
 #include "Sniffer.h"
 
-string Sniffer::getLocalIpv4() {
+vector<NetData> tcpNetData;
+vector<NetData> udpNetData;
+
+Sniffer::Sniffer(const vector<NetData> &tcpNetData, const vector<NetData> &udpNetData) {
+    ::tcpNetData = tcpNetData;
+    ::udpNetData = udpNetData;
+}
+
+void Sniffer::sniff() {
+    auto deviceName = retrieveListeningDeviceName();
+
+    char errbuf[PCAP_ERRBUF_SIZE];
+    pcap_t* packetDescriptor = pcap_open_live(deviceName.c_str(), BUFSIZ, 0, -1, errbuf);
+
+    if (packetDescriptor == NULL) {
+        perror("Failed to listen to device");
+        exit(1);
+    }
+
+    pcap_loop(packetDescriptor, -1, [](u_char* args, const struct pcap_pkthdr* pkthdr, const u_char* packet) {
+        struct ip* ipHeader = (struct ip*)(packet + sizeof(struct ether_header));
+
+        string srcIp = inet_ntoa(ipHeader->ip_src);
+        string dstIp = inet_ntoa(ipHeader->ip_dst);
+
+        switch (ipHeader->ip_p) {
+            case IPPROTO_TCP:
+                TcpProcessor().process(srcIp, dstIp, pkthdr, packet, tcpNetData);
+                break;
+            case IPPROTO_UDP:
+                UdpProcessor().process(srcIp, dstIp, pkthdr, packet, udpNetData);
+                break;
+            default:
+                return;
+        }
+
+    }, NULL);
+}
+
+string Sniffer::retrieveListeningDeviceName() {
     char error[PCAP_ERRBUF_SIZE];
     char* deviceName = pcap_lookupdev(error);
 
@@ -26,17 +65,5 @@ string Sniffer::getLocalIpv4() {
         exit(1);
     }
 
-    int socketFd = socket(AF_INET, SOCK_DGRAM, 0);
-
-    struct ifreq ifr;
-    ifr.ifr_addr.sa_family = AF_INET;
-
-    strncpy(ifr.ifr_name, deviceName, IFNAMSIZ - 1);
-
-    ioctl(socketFd, SIOCGIFADDR, &ifr);
-    close(socketFd);
-
-    string localIp = inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr);
-
-    return localIp;
+    return deviceName;
 }

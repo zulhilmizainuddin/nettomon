@@ -2,12 +2,19 @@
 #define NETTOMON_SNIFFER_H
 
 #include <string>
+#include <vector>
+#include "NetData.h"
 
 using namespace std;
 
 class Sniffer {
 public:
-    string getLocalIpv4();
+    Sniffer(const vector<NetData> &tcpNetData, const vector<NetData> &udpNetData);
+
+    void sniff();
+
+private:
+    string retrieveListeningDeviceName();
 };
 
 

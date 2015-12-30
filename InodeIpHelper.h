@@ -10,8 +10,7 @@ using namespace std;
 
 class InodeIpHelper {
 public:
-    static map<string, NetData> join(map<string, NetData> tcp, map<string, NetData> udp);
-    static map<string, NetData> filter(vector<string> socketInodes, map<string, NetData> inodeIps);
+    static vector<NetData> filterProccessIp(vector<string> socketInodes, map<string, NetData> inodeIps);
 };
 
 
