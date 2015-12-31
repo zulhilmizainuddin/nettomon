@@ -2,6 +2,7 @@
 #include "Sniffer.h"
 #include "ProcReadTimerData.h"
 #include "ProcReadTimer.h"
+#include "NetworkSpeedTimer.h"
 
 using namespace std;
 
@@ -29,6 +30,7 @@ int main(int argc, char* argv[]) {
     };
 
     ProcReadTimer().start(procReadTimerData);
+    NetworkSpeedTimer().start();
 
     sniffer.sniff();
 
