@@ -1,5 +1,7 @@
-#include "ProcFd.h"
-#include "ProcNet.h"
+#include "ProcNetPublisher.h"
+#include "Sniffer.h"
+#include "ProcReadTimerData.h"
+#include "ProcReadTimer.h"
 
 using namespace std;
 
@@ -17,6 +19,18 @@ int main(int argc, char* argv[]) {
             exit(1);
         }
     }
+
+    ProcNetPublisher procNetPublisher = ProcNetPublisher();
+    Sniffer sniffer = Sniffer(&procNetPublisher);
+
+    struct ProcReadTimerData procReadTimerData = {
+            pid,
+            &procNetPublisher
+    };
+
+    ProcReadTimer().start(procReadTimerData);
+
+    sniffer.sniff();
 
     return 0;
 }
