@@ -10,9 +10,9 @@
 vector<NetData> tcpNetData;
 vector<NetData> udpNetData;
 
-Sniffer::Sniffer(const vector<NetData> &tcpNetData, const vector<NetData> &udpNetData) {
-    ::tcpNetData = tcpNetData;
-    ::udpNetData = udpNetData;
+Sniffer::Sniffer(ProcNetPublisher *procPublisher) {
+    this->procPublisher = procPublisher;
+    this->procPublisher->registerObserver(this);
 }
 
 void Sniffer::sniff() {
@@ -50,4 +50,10 @@ void Sniffer::sniff() {
         }
 
     }, NULL);
+}
+
+
+void Sniffer::updateNetData(vector<NetData> tcpNetData, vector<NetData> udpNetData) {
+    ::tcpNetData = tcpNetData;
+    ::udpNetData = udpNetData;
 }
