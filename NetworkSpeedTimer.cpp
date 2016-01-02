@@ -11,7 +11,7 @@ using namespace boost;
 void *startDisplayNetworkSpeedTimer(void *argv);
 void displayNetworkSpeed(const system::error_code &code, asio::deadline_timer *timer);
 
-void *NetworkSpeedTimer::start() {
+void NetworkSpeedTimer::start() {
     pthread_t thread;
 
     int threadStatus = pthread_create(&thread, NULL, startDisplayNetworkSpeedTimer, NULL);

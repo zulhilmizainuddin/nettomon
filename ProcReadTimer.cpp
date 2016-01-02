@@ -16,7 +16,7 @@ void *startProcReadTimer(void *argv);
 void procRead(const system::error_code &code, asio::deadline_timer *timer, string pid,
               ProcNetPublisher *procNetPublisher);
 
-void *ProcReadTimer::start(ProcReadTimerData data) {
+void ProcReadTimer::start(ProcReadTimerData data) {
     pthread_t thread;
 
     int threadStatus = pthread_create(&thread, NULL, startProcReadTimer, (void *) &data);

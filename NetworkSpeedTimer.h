@@ -4,7 +4,7 @@
 
 class NetworkSpeedTimer {
 public:
-    void *start();
+    void start();
 };
 
 

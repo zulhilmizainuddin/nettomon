@@ -7,7 +7,7 @@
 
 class ProcReadTimer {
 public:
-    void *start(ProcReadTimerData data);
+    void start(ProcReadTimerData data);
 };
 
 
