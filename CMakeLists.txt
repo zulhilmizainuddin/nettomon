@@ -10,7 +10,8 @@ find_path(PCAP_ROOT_DIR NAMES include/pcap.h)
 find_path(PCAP_INCLUDE_DIR NAMES pcap.h HINTS ${PCAP_ROOT_DIR}/include)
 find_library(PCAP_LIBRARY NAMES pcap HINTS ${PCAP_ROOT_DIR}/lib)
 
-find_package(Boost 1.54.0 COMPONENTS system filesystem REQUIRED)
+set(Boost_USE_STATIC_LIBS ON)
+find_package(Boost 1.54.0 COMPONENTS system REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
 add_executable(nettomon ${SOURCE_FILES})
