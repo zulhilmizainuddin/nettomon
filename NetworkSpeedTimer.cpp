@@ -33,9 +33,10 @@ void *startDisplayNetworkSpeedTimer(void *argv) {
 
 void displayNetworkSpeed(const system::error_code &code, asio::deadline_timer *timer) {
 
-    printf("Upload: %7.1lf KB     Download: %7.1lf KB\n",
+    printf("\rUpload: %7.1lf KB     Download: %7.1lf KB",
            PacketPayload::getInstance().getUploadedBytes() / 1000.0,
            PacketPayload::getInstance().getDownloadedBytes() / 1000.0);
+    fflush(stdout);
 
     PacketPayload::getInstance().resetUploadedBytes();
     PacketPayload::getInstance().resetDownloadedBytes();
