@@ -29,7 +29,7 @@ vector<string> ProcFd::getSymlinksContent() {
         char symlinkContent[BUFSIZ];
         readlink(symlinkName.c_str(), symlinkContent, sizeof(symlinkContent));
 
-        symlinkContentList.push_back(strdup(symlinkContent));
+        symlinkContentList.push_back(string(symlinkContent));
     }
 
     closedir(directory);
