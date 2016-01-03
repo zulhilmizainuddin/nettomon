@@ -1,11 +1,15 @@
 #ifndef NETTOMON_PAYLOAD_H
 #define NETTOMON_PAYLOAD_H
 
+#include <pthread.h>
 
 class PacketPayload {
 private:
-    unsigned long uploadedBytes;
-    unsigned long downloadedBytes;
+    volatile unsigned long uploadedBytes;
+    volatile unsigned long downloadedBytes;
+
+    pthread_mutex_t uploadMutex = PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_t downloadMutex = PTHREAD_MUTEX_INITIALIZER;
 
 public:
     static PacketPayload & getInstance() {
@@ -14,27 +18,51 @@ public:
     }
 
     void resetUploadedBytes() {
+        pthread_mutex_lock(&uploadMutex);
         PacketPayload::uploadedBytes = 0;
+        pthread_mutex_unlock(&uploadMutex);
     }
 
-    unsigned long getUploadedBytes() const {
-        return uploadedBytes;
+    unsigned long getUploadedBytes() {
+        pthread_mutex_lock(&uploadMutex);
+        auto uploadedBytesTemp = uploadedBytes;
+        pthread_mutex_unlock(&uploadMutex);
+
+        return uploadedBytesTemp;
     }
 
     void addUploadedBytes(unsigned long uploadedBytes) {
+        pthread_mutex_lock(&uploadMutex);
         PacketPayload::uploadedBytes += uploadedBytes;
+        pthread_mutex_unlock(&uploadMutex);
+    }
+
+    void lockDownload() {
+        pthread_mutex_lock(&downloadMutex);
+    }
+
+    void unlockDownload() {
+        pthread_mutex_unlock(&downloadMutex);
     }
 
     void resetDownloadedBytes() {
+        pthread_mutex_lock(&downloadMutex);
         PacketPayload::downloadedBytes = 0;
+        pthread_mutex_unlock(&downloadMutex);
     }
 
-    unsigned long getDownloadedBytes() const {
-        return downloadedBytes;
+    unsigned long getDownloadedBytes() {
+        pthread_mutex_lock(&downloadMutex);
+        auto downloadedBytesTemp = downloadedBytes;
+        pthread_mutex_unlock(&downloadMutex);
+
+        return downloadedBytesTemp;
     }
 
     void addDownloadedBytes(unsigned long downloadedBytes) {
+        pthread_mutex_lock(&downloadMutex);
         PacketPayload::downloadedBytes += downloadedBytes;
+        pthread_mutex_unlock(&downloadMutex);
     }
 
 private:
