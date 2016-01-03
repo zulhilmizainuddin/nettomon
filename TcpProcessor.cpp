@@ -11,21 +11,21 @@ void TcpProcessor::process(string srcIp, string dstIp, const struct pcap_pkthdr 
     struct tcphdr* tcpHeader =
             (struct tcphdr*)(packet + sizeof(struct ether_header) + sizeof(struct ip));
 
-    auto srcPort = ntohs((uint16_t) tcpHeader->source);
-    auto dstPort = ntohs((uint16_t) tcpHeader->dest);
+    auto srcPort = ntohs(tcpHeader->source);
+    auto dstPort = ntohs(tcpHeader->dest);
 
     for (auto data: netData) {
         struct in_addr localAddr;
         struct in_addr remoteAddr;
 
-        localAddr.s_addr = (in_addr_t) stoul(data.localIp, NULL, 16);
-        remoteAddr.s_addr = (in_addr_t) stoul(data.remoteIp, NULL, 16);
+        localAddr.s_addr = stoul(data.localIp, NULL, 16);
+        remoteAddr.s_addr = stoul(data.remoteIp, NULL, 16);
 
         string localIp = inet_ntoa(localAddr);
         string remoteIp = inet_ntoa(remoteAddr);
 
-        auto localPort = (unsigned short) stoul(data.localPort, NULL, 16);
-        auto remotePort = (unsigned short) stoul(data.remotePort, NULL, 16);
+        auto localPort = stoul(data.localPort, NULL, 16);
+        auto remotePort = stoul(data.remotePort, NULL, 16);
 
         if (srcIp == localIp && srcPort == localPort && dstIp == remoteIp && dstPort == remotePort) {
             PacketPayload::getInstance().addUploadedBytes(pkthdr->len);
