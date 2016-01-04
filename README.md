@@ -2,6 +2,8 @@
 C++ program for monitoring Linux and Android process network upload and download speed using libpcap.
 Currently supports IPv4.
 
+<img src="https://github.com/zulhilmizainuddin/nettomon/blob/master/nettomon.gif">
+
 ## Getting Started
 
 ###Linux
