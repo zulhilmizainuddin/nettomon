@@ -20,6 +20,11 @@ void NetworkSpeedTimer::start() {
         perror("Failed to create network speed thread");
         exit(1);
     }
+
+    if (pthread_detach(thread) != 0) {
+        perror("Failed to detach network speed thread");
+    }
+
 }
 
 void *startDisplayNetworkSpeedTimer(void *argv) {

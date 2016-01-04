@@ -25,6 +25,11 @@ void ProcReadTimer::start(ProcReadTimerData data) {
         perror("Failed to create proc read thread");
         exit(1);
     }
+
+    if (pthread_detach(thread) != 0) {
+        perror("Failed to detach proc read thread");
+    }
+
 }
 
 void *startProcReadTimer(void *argv) {
