@@ -37,14 +37,6 @@ public:
         pthread_mutex_unlock(&uploadMutex);
     }
 
-    void lockDownload() {
-        pthread_mutex_lock(&downloadMutex);
-    }
-
-    void unlockDownload() {
-        pthread_mutex_unlock(&downloadMutex);
-    }
-
     void resetDownloadedBytes() {
         pthread_mutex_lock(&downloadMutex);
         PacketPayload::downloadedBytes = 0;

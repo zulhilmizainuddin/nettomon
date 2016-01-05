@@ -15,21 +15,19 @@ vector<string> ProcFd::getSymlinksContent() {
 
     DIR* directory = opendir(directoryName.c_str());
     if (directory == NULL) {
-        string error = directoryName + " does not exist";
-        perror(error.c_str());
+        perror(string(directoryName + " does not exist").c_str());
         exit(1);
     }
 
-    struct dirent* symlink;
     vector<string> symlinkContentList;
 
-    while (symlink = readdir(directory)) {
+    while (struct dirent* symlink = readdir(directory)) {
         string symlinkName = "/proc/" + pid + "/fd/" + symlink->d_name;
 
         char symlinkContent[BUFSIZ];
-        readlink(symlinkName.c_str(), symlinkContent, sizeof(symlinkContent));
-
-        symlinkContentList.push_back(string(symlinkContent));
+        if  (readlink(symlinkName.c_str(), symlinkContent, sizeof(symlinkContent)) != -1) {
+            symlinkContentList.push_back(string(symlinkContent));
+        }
     }
 
     closedir(directory);
@@ -38,17 +36,16 @@ vector<string> ProcFd::getSymlinksContent() {
 }
 
 vector<string> ProcFd::extractSocketsInode(vector<string> symlinkContentList) {
-
     vector<string> socketInodeList;
 
-    for_each(symlinkContentList.begin(), symlinkContentList.end(), [&](string symlinkContent) {
+    for (auto symlinkContent: symlinkContentList) {
         regex socketInodeRegex("socket:\\[([0-9]+)\\]");
         smatch match;
 
         if (regex_search(symlinkContent, match, socketInodeRegex)) {
             socketInodeList.push_back(match[1].str().c_str());
         }
-    });
+    }
 
     return socketInodeList;
 }
