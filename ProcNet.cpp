@@ -33,13 +33,13 @@ vector<string> ProcNet::getIpTypeData() {
 map<string, NetData> ProcNet::extractInodesIpMapping(vector<string> ipTypeDataList) {
     map<string, NetData> inodesIpMap;
 
-    for_each(ipTypeDataList.begin(), ipTypeDataList.end(), [&](string ipTypeData) {
+    for (auto ipTypeData: ipTypeDataList) {
         regex ipTypeDataRegex("^\\d+:\\s+([0-9A-Z]+):([0-9A-Z]+)\\s+([0-9A-Z]+):([0-9A-Z]+)(?:\\s+.+?){6}\\s+([0-9]+)");
         smatch match;
 
         if  (regex_search(ipTypeData, match, ipTypeDataRegex)) {
 
-            NetData netData = {
+            struct NetData netData = {
                     match[1].str().c_str(),
                     match[2].str().c_str(),
                     match[3].str().c_str(),
@@ -48,7 +48,7 @@ map<string, NetData> ProcNet::extractInodesIpMapping(vector<string> ipTypeDataLi
 
             inodesIpMap[match[5].str().c_str()] = netData;
         }
-    });
+    }
 
     return inodesIpMap;
 }
