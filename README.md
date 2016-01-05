@@ -21,13 +21,9 @@ Edit CMakeLists.txt if using different version of the dependencies.
 
 ####Build
 
-Run the following commands to compile at the project root directory:
+Run build.sh. The nettomon binary will be located under the build directory:
 
-    mkdir build
-    cd build
-    cmake ..
-    cd ..
-    cmake --build build --target nettomon
+    ./build.sh
     
 ####Execute the program
 
