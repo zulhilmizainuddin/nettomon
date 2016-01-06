@@ -5,9 +5,11 @@
 #include "ProcReadTimerData.h"
 
 
-class ProcReadTimer {
+class ProcReadTimer : public ProcNetPublisher {
 public:
-    void start(ProcReadTimerData data);
+    ProcReadTimer();
+
+    void start(const char *pid);
 };
 
 

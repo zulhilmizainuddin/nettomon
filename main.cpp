@@ -1,6 +1,5 @@
 #include "ProcNetPublisher.h"
 #include "Sniffer.h"
-#include "ProcReadTimerData.h"
 #include "ProcReadTimer.h"
 #include "NetworkSpeedTimer.h"
 
@@ -21,15 +20,10 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    ProcNetPublisher procNetPublisher = ProcNetPublisher();
-    Sniffer sniffer = Sniffer(&procNetPublisher);
+    auto procReadTimer = ProcReadTimer();
+    Sniffer sniffer = Sniffer(&procReadTimer);
 
-    struct ProcReadTimerData procReadTimerData = {
-            pid,
-            &procNetPublisher
-    };
-
-    ProcReadTimer().start(procReadTimerData);
+    procReadTimer.start(pid.c_str());
     NetworkSpeedTimer().start();
 
     sniffer.sniff();
