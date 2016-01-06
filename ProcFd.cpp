@@ -4,13 +4,12 @@
 #include "ProcFd.h"
 
 vector<string> ProcFd::getSocketInodeList() {
-    auto symLinksContent = getSymlinksContent();
-    auto socketInodeList = extractSocketsInode(symLinksContent);
+    auto socketInodeList = retrieveSocketsInode();
 
     return socketInodeList;
 }
 
-vector<string> ProcFd::getSymlinksContent() {
+vector<string> ProcFd::retrieveSocketsInode() {
     string directoryName = "/proc/" + pid + "/fd";
 
     DIR* directory = opendir(directoryName.c_str());
@@ -19,33 +18,33 @@ vector<string> ProcFd::getSymlinksContent() {
         exit(1);
     }
 
-    vector<string> symlinkContentList;
+    vector<string> socketInodeList;
 
     while (struct dirent* symlink = readdir(directory)) {
         string symlinkName = "/proc/" + pid + "/fd/" + symlink->d_name;
 
         char symlinkContent[BUFSIZ];
-        if  (readlink(symlinkName.c_str(), symlinkContent, sizeof(symlinkContent)) != -1) {
-            symlinkContentList.push_back(string(symlinkContent));
+        if (readlink(symlinkName.c_str(), symlinkContent, sizeof(symlinkContent)) != -1) {
+            string socketInode = extractSocketInode(symlinkContent);
+            if (socketInode.size() != 0) {
+                socketInodeList.push_back(socketInode);
+            }
         }
     }
 
     closedir(directory);
 
-    return symlinkContentList;
+    return socketInodeList;
 }
 
-vector<string> ProcFd::extractSocketsInode(vector<string> symlinkContentList) {
-    vector<string> socketInodeList;
+string ProcFd::extractSocketInode(string symlinkContent) {
+    regex socketInodeRegex("socket:\\[([0-9]+)\\]");
+    smatch match;
 
-    for (auto symlinkContent: symlinkContentList) {
-        regex socketInodeRegex("socket:\\[([0-9]+)\\]");
-        smatch match;
-
-        if (regex_search(symlinkContent, match, socketInodeRegex)) {
-            socketInodeList.push_back(match[1].str().c_str());
-        }
+    string socketInode;
+    if (regex_search(symlinkContent, match, socketInodeRegex)) {
+        socketInode = match[1].str().c_str();
     }
 
-    return socketInodeList;
+    return socketInode;
 }

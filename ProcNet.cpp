@@ -4,18 +4,17 @@
 #include "ProcNet.h"
 
 map<string, NetData> ProcNet::getInodesIpMap() {
-    auto ipTypeData = getIpTypeData();
-    auto inodeIpMapList = extractInodesIpMapping(ipTypeData);
+    auto inodeIpMapList = retrieveInodeIpMapping();
 
     return inodeIpMapList;
 }
 
-vector<string> ProcNet::getIpTypeData() {
+map<string, NetData> ProcNet::retrieveInodeIpMapping() {
     string filename = "/proc/net/" + ipType;
 
     ifstream file(filename);
     string store;
-    vector<string> ipTypeDataList;
+    map<string, NetData> inodesIpMap;
 
     while (getline(file, store)) {
         string header("sl  local_address rem_address   st tx_queue rx_queue tr tm->when retrnsmt   uid  timeout inode");
@@ -23,32 +22,29 @@ vector<string> ProcNet::getIpTypeData() {
             auto first = store.find_first_not_of(" ");
             auto last = store.find_last_not_of(" ");
 
-            ipTypeDataList.push_back(store.substr(first, last - first + 1));
-        }
-    }
+            string ipTypeData = store.substr(first, last - first + 1);
 
-    return ipTypeDataList;
-}
-
-map<string, NetData> ProcNet::extractInodesIpMapping(vector<string> ipTypeDataList) {
-    map<string, NetData> inodesIpMap;
-
-    for (auto ipTypeData: ipTypeDataList) {
-        regex ipTypeDataRegex("^\\d+:\\s+([0-9A-Z]+):([0-9A-Z]+)\\s+([0-9A-Z]+):([0-9A-Z]+)(?:\\s+.+?){6}\\s+([0-9]+)");
-        smatch match;
-
-        if  (regex_search(ipTypeData, match, ipTypeDataRegex)) {
-
-            struct NetData netData = {
-                    match[1].str().c_str(),
-                    match[2].str().c_str(),
-                    match[3].str().c_str(),
-                    match[4].str().c_str()
-            };
-
-            inodesIpMap[match[5].str().c_str()] = netData;
+            inodesIpMap.insert(extractInodeIpMapping(ipTypeData));
         }
     }
 
     return inodesIpMap;
+}
+
+pair<string, NetData> ProcNet::extractInodeIpMapping(string ipTypeData) {
+    regex ipTypeDataRegex("^\\d+:\\s+([0-9A-Z]+):([0-9A-Z]+)\\s+([0-9A-Z]+):([0-9A-Z]+)(?:\\s+.+?){6}\\s+([0-9]+)");
+    smatch match;
+
+    struct NetData netData;
+    if (regex_search(ipTypeData, match, ipTypeDataRegex)) {
+
+        netData = {
+            match[1].str().c_str(),
+            match[2].str().c_str(),
+            match[3].str().c_str(),
+            match[4].str().c_str()
+        };
+    }
+
+    return pair<string, NetData>(match[5].str().c_str(), netData);
 }

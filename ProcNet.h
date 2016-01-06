@@ -18,8 +18,8 @@ public:
     map<string, NetData> getInodesIpMap();
 
 private:
-    vector<string> getIpTypeData();
-    map<string, NetData> extractInodesIpMapping(vector<string> ipTypeDataList);
+    map<string, NetData> retrieveInodeIpMapping();
+    pair<string, NetData> extractInodeIpMapping(string ipTypeData);
 };
 
 
