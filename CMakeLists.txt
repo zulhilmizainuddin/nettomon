@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.3)
 project(nettomon)
 
 set(CMAKE_CXX_COMPILER g++-4.9)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -lpcap -pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -lpcap -pthread -O3")
 
 set(SOURCE_FILES
         main.cpp
