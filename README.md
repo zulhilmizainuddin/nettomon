@@ -1,4 +1,4 @@
-# nettomon
+# nettomon [![Build Status](https://travis-ci.org/zulhilmizainuddin/nettomon.svg?branch=master)](https://travis-ci.org/zulhilmizainuddin/nettomon)
 C++ program for monitoring Linux and Android process network upload and download speed using libpcap.
 Currently supports IPv4.
 
@@ -12,10 +12,10 @@ Currently supports IPv4.
 
 Install the following dependencies:
 
-    CMake v3.3
+    CMake
     g++ v4.9
-    Boost v1.54
-    libpcap v1.5.3-2
+    Boost
+    libpcap
     
 Edit CMakeLists.txt if using different version of the dependencies.
 
