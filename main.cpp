@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
     auto sniffer = Sniffer(&procReadTimer);
 
     procReadTimer.start(argv[1], 100);
-    NetworkSpeedTimer().start();
+    NetworkSpeedTimer().start(1000);
 
     sniffer.sniff(100);
 
