@@ -9,7 +9,7 @@ class ProcReadTimer : public ProcNetPublisher {
 public:
     ProcReadTimer();
 
-    void start(const char *pid);
+    void start(string pid, int interval);
 };
 
 

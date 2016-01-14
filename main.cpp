@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
     auto procReadTimer = ProcReadTimer();
     auto sniffer = Sniffer(&procReadTimer);
 
-    procReadTimer.start(argv[1]);
+    procReadTimer.start(argv[1], 100);
     NetworkSpeedTimer().start();
 
     sniffer.sniff(100);
