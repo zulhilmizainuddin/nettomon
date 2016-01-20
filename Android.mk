@@ -16,7 +16,9 @@ LOCAL_SRC_FILES :=\
         ProcNetObserver.cpp\
         ProcReadTimer.cpp\
         NetworkSpeedTimer.cpp
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/libpcap $(LOCAL_PATH)
+
+LOCAL_CFLAGS := -O3
+LOCAL_C_INCLUDES := $(LOCAL_PATH) $(LOCAL_PATH)/libpcap
 LOCAL_STATIC_LIBRARIES := libpcap boost_system_static
 
 include $(BUILD_EXECUTABLE)
