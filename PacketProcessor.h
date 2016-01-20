@@ -2,7 +2,7 @@
 #define NETTOMON_TRANSPORTPROCESSOR_H
 
 #include <vector>
-#include <pcap/pcap.h>
+#include <pcap.h>
 #include "NetData.h"
 
 class PacketProcessor {
