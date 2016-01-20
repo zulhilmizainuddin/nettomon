@@ -10,12 +10,15 @@ Currently supports IPv4.
 
 ####Environment setup
 
-Install the following dependencies:
+Install the dependencies:
 
-    CMake
-    g++ v4.9
-    Boost
-    libpcap
+    sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+    sudo apt-get -y update
+    sudo apt-get -y install build-essential
+    sudo apt-get -y install cmake
+    sudo apt-get -y install g++-4.9
+    sudo apt-get -y install libboost-all-dev
+    sudo apt-get -y install libpcap-dev
     
 Edit CMakeLists.txt if using different version of the dependencies.
 
