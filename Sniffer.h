@@ -12,7 +12,7 @@ class Sniffer : ProcNetObserver {
 public:
     Sniffer(ProcNetPublisher *procPublisher);
 
-    void sniff(int readTimeout);
+    void sniff();
     virtual void updateNetData(vector<NetData> tcpNetData, vector<NetData> udpNetData);
 };
 

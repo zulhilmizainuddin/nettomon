@@ -6,7 +6,7 @@
 
 struct ProcReadTimerData {
     string pid;
-    int interval;
+    ProcNetPublisher* publisher;
 };
 
 #endif //NETTOMON_PROCREADTIMERDATA_H

@@ -17,7 +17,7 @@ Sniffer::Sniffer(ProcNetPublisher *procPublisher) {
     this->procPublisher->registerObserver(this);
 }
 
-void Sniffer::sniff(int readTimeout) {
+void Sniffer::sniff() {
     char errbuf[PCAP_ERRBUF_SIZE];
 
     string deviceName = pcap_lookupdev(errbuf);
@@ -27,7 +27,7 @@ void Sniffer::sniff(int readTimeout) {
         exit(1);
     }
 
-    pcap_t* packetDescriptor = pcap_open_live(deviceName.c_str(), BUFSIZ, 0, readTimeout, errbuf);
+    pcap_t* packetDescriptor = pcap_open_live(deviceName.c_str(), BUFSIZ, 0, 100, errbuf);
 
     if (packetDescriptor == NULL) {
         perror("Failed to listen to device");

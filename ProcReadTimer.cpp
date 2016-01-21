@@ -13,7 +13,7 @@ using namespace std;
 using namespace boost;
 
 void *startProcReadTimer(void *argv);
-void procRead(const system::error_code &code, asio::deadline_timer *timer, string pid, int interval);
+void procRead(const system::error_code &code, asio::deadline_timer *timer, string pid);
 
 ProcNetPublisher* procNetPublisher;
 
@@ -21,14 +21,10 @@ ProcReadTimer::ProcReadTimer() {
     procNetPublisher = this;
 }
 
-void ProcReadTimer::start(string pid, int interval) {
+void ProcReadTimer::start(const char *pid) {
     pthread_t thread;
 
-    struct ProcReadTimerData* data = new ProcReadTimerData();
-    data->pid = pid;
-    data->interval = interval;
-
-    int threadStatus = pthread_create(&thread, NULL, startProcReadTimer, data);
+    int threadStatus = pthread_create(&thread, NULL, startProcReadTimer, (void*)pid);
 
     if  (threadStatus != 0) {
         perror("Failed to create proc read thread");
@@ -38,22 +34,21 @@ void ProcReadTimer::start(string pid, int interval) {
     if (pthread_detach(thread) != 0) {
         perror("Failed to detach proc read thread");
     }
+
 }
 
 void *startProcReadTimer(void *argv) {
-    struct ProcReadTimerData* data = (ProcReadTimerData*)argv;
+    string pid = (const char*)argv;
 
     asio::io_service io;
 
-    asio::deadline_timer timer(io, posix_time::milliseconds(data->interval));
-    timer.async_wait(bind(procRead, asio::placeholders::error, &timer, data->pid, data->interval));
-
-    delete data;
+    asio::deadline_timer timer(io, posix_time::milliseconds(500));
+    timer.async_wait(bind(procRead, asio::placeholders::error, &timer, pid));
 
     io.run();
 }
 
-void procRead(const system::error_code &code, asio::deadline_timer *timer, string pid, int interval) {
+void procRead(const system::error_code &code, asio::deadline_timer *timer, string pid) {
     auto socketsInode = ProcFd(pid).getSocketInodeList();
 
     auto tcpInodeIp = ProcNet("tcp").getInodesIpMap();
@@ -65,6 +60,6 @@ void procRead(const system::error_code &code, asio::deadline_timer *timer, strin
     procNetPublisher->setNetData(tcpNetData, udpNetData);
     procNetPublisher->notifyObservers();
 
-    timer->expires_at(timer->expires_at() + posix_time::milliseconds(interval));
-    timer->async_wait(bind(procRead, asio::placeholders::error, timer, pid, interval));
+    timer->expires_at(timer->expires_at() + posix_time::milliseconds(500));
+    timer->async_wait(bind(procRead, asio::placeholders::error, timer, pid));
 }

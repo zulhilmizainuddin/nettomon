@@ -9,12 +9,12 @@ using namespace std;
 using namespace boost;
 
 void *startDisplayNetworkSpeedTimer(void *argv);
-void displayNetworkSpeed(const system::error_code &code, asio::deadline_timer *timer, int interval);
+void displayNetworkSpeed(const system::error_code &code, asio::deadline_timer *timer);
 
-void NetworkSpeedTimer::start(int interval) {
+void NetworkSpeedTimer::start() {
     pthread_t thread;
 
-    int threadStatus = pthread_create(&thread, NULL, startDisplayNetworkSpeedTimer, &interval);
+    int threadStatus = pthread_create(&thread, NULL, startDisplayNetworkSpeedTimer, NULL);
 
     if  (threadStatus != 0) {
         perror("Failed to create network speed thread");
@@ -28,26 +28,24 @@ void NetworkSpeedTimer::start(int interval) {
 }
 
 void *startDisplayNetworkSpeedTimer(void *argv) {
-    int interval = *(int*)argv;
-
     asio::io_service io;
 
-    asio::deadline_timer timer(io, posix_time::milliseconds(interval));
-    timer.async_wait(bind(displayNetworkSpeed, asio::placeholders::error, &timer, interval));
+    asio::deadline_timer timer(io, posix_time::milliseconds(1000));
+    timer.async_wait(bind(displayNetworkSpeed, asio::placeholders::error, &timer));
 
     io.run();
 }
 
-void displayNetworkSpeed(const system::error_code &code, asio::deadline_timer *timer, int interval) {
+void displayNetworkSpeed(const system::error_code &code, asio::deadline_timer *timer) {
 
     printf("\rUpload: %7.1lf KB     Download: %7.1lf KB",
-           PacketPayload::getInstance().getUploadedBytes() / (float)interval,
-           PacketPayload::getInstance().getDownloadedBytes() / (float)interval);
+           PacketPayload::getInstance().getUploadedBytes() / 1000.0,
+           PacketPayload::getInstance().getDownloadedBytes() / 1000.0);
     fflush(stdout);
 
     PacketPayload::getInstance().resetUploadedBytes();
     PacketPayload::getInstance().resetDownloadedBytes();
 
-    timer->expires_at(timer->expires_at() + posix_time::milliseconds(interval));
-    timer->async_wait(bind(displayNetworkSpeed, asio::placeholders::error, timer, interval));
+    timer->expires_at(timer->expires_at() + posix_time::milliseconds(1000));
+    timer->async_wait(bind(displayNetworkSpeed, asio::placeholders::error, timer));
 }

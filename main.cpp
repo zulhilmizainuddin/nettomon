@@ -21,10 +21,10 @@ int main(int argc, char* argv[]) {
     auto procReadTimer = ProcReadTimer();
     auto sniffer = Sniffer(&procReadTimer);
 
-    procReadTimer.start(argv[1], 100);
-    NetworkSpeedTimer().start(1000);
+    procReadTimer.start(argv[1]);
+    NetworkSpeedTimer().start();
 
-    sniffer.sniff(100);
+    sniffer.sniff();
 
     return 0;
 }
