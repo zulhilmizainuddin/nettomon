@@ -44,7 +44,7 @@ Pass the pid of the process to be monitored:
 
 ###Environment setup
 
-Download and extract <a href="https://www.crystax.net/download/crystax-ndk-10.3.1-linux-x86_64.tar.xz">CrystaX NDK<a/>.
+Download and extract <a href="https://www.crystax.net/download/crystax-ndk-10.3.1-linux-x86_64.tar.xz">CrystaX NDK<a/> for Linux.
 
 Add CrystaX NDK to the PATH variable in .bashrc.
 
