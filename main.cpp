@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
 
-    if (!regex_match(argv[1], regex("^[0-9]+$"))) {
+    if (!regex_match(argv[1], regex("^[0-9]{1,5}+$"))) {
         perror("pid must be an integer");
         exit(1);
     }
