@@ -1,6 +1,8 @@
 #!/bin/bash
 
-mkdir -v build
+if [[ ! -d build ]]; then
+    mkdir -v build
+fi
 cd build
 cmake ..
 cd ..
