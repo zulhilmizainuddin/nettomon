@@ -19,6 +19,7 @@ vector<string> ProcFd::retrieveSocketsInode() {
     }
 
     vector<string> socketInodeList;
+    socketInodeList.reserve(100);
 
     while (struct dirent* symlink = readdir(directory)) {
         string symlinkName = "/proc/" + pid + "/fd/" + symlink->d_name;

@@ -3,14 +3,14 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include "NetData.h"
 
 using namespace std;
 
 class InodeIpHelper {
 public:
-    static vector<NetData> filterProccessIp(vector<string> socketInodes, map<string, NetData> inodeIps);
+    static vector<NetData> filterProccessIp(vector<string> socketInodes, unordered_map<string, NetData> inodeIps);
 };
 
 

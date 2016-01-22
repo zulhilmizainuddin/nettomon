@@ -2,7 +2,7 @@
 #define NETTOMON_PROCNET_H
 
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <vector>
 #include "NetData.h"
 
@@ -15,10 +15,10 @@ private:
 public:
     ProcNet(string ipType) : ipType(ipType) { }
 
-    map<string, NetData> getInodesIpMap();
+    unordered_map<string, NetData> getInodesIpMap();
 
 private:
-    map<string, NetData> retrieveInodeIpMapping();
+    unordered_map<string, NetData> retrieveInodeIpMapping();
     pair<string, NetData> extractInodeIpMapping(string ipTypeData);
 };
 

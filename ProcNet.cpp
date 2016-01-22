@@ -3,18 +3,19 @@
 #include <regex>
 #include "ProcNet.h"
 
-map<string, NetData> ProcNet::getInodesIpMap() {
+unordered_map<string, NetData> ProcNet::getInodesIpMap() {
     auto inodeIpMapList = retrieveInodeIpMapping();
 
     return inodeIpMapList;
 }
 
-map<string, NetData> ProcNet::retrieveInodeIpMapping() {
+unordered_map<string, NetData> ProcNet::retrieveInodeIpMapping() {
     string filename = "/proc/net/" + ipType;
 
     ifstream file(filename);
     string store;
-    map<string, NetData> inodesIpMap;
+    unordered_map<string, NetData> inodesIpMap;
+    inodesIpMap.reserve(100);
 
     while (getline(file, store)) {
         string header("sl  local_address rem_address   st tx_queue rx_queue tr tm->when retrnsmt   uid  timeout inode");
