@@ -4,11 +4,9 @@ Currently supports IPv4.
 
 <img src="https://github.com/zulhilmizainuddin/nettomon/blob/master/nettomon.gif">
 
-## Getting Started
+##Linux
 
-###Linux
-
-####Environment setup
+###Environment setup
 
 Install the dependencies:
 
@@ -22,19 +20,19 @@ Install the dependencies:
     
 Edit CMakeLists.txt if using different version of the dependencies.
 
-####Get the source code
+###Get the source code
 
 Clone the repository.
 
     $ git clone https://github.com/zulhilmizainuddin/nettomon.git nettomon
 
-####Build
+###Build
 
 Run build.sh. The nettomon binary will be located under the build directory:
 
     $ ./build.sh
     
-####Execute the program
+###Execute the program
 
 Nettomon must be executed with superuser permission as it is using libpcap for the network monitoring.
 
@@ -42,9 +40,9 @@ Pass the pid of the process to be monitored:
 
     $ sudo ./nettomon <pid>
 
-###Android
+##Android
 
-####Environment setup
+###Environment setup
 
 Download and extract <a href="https://www.crystax.net/download/crystax-ndk-10.3.1-linux-x86_64.tar.xz">CrystaX NDK<a/>.
 
@@ -52,19 +50,19 @@ Add CrystaX NDK to the PATH variable in .bashrc.
 
     PATH=$PATH:~/crystax-ndk-10.3.1-linux-x86_64/crystax-ndk-10.3.1/
     
-####Get the source code
+###Get the source code
 
 Clone the repository into nettomon/jni directory.
 
     $ git clone https://github.com/zulhilmizainuddin/nettomon.git nettomon/jni
     
-####Build
+###Build
 
 Build the source code. The binaries will be under the libs directory.
 
     $ ndk-build APP_ABI=armeabi-v7a
     
-####Deploy
+###Deploy
 
 Deploy the binaries to the Android device under directory /data/local/tmp.
 
@@ -72,7 +70,7 @@ Deploy the binaries to the Android device under directory /data/local/tmp.
     $ adb push libs/armeabi-v7a/libgnustl_shared.so /data/local/tmp
     $ adb push libs/armeabi-v7a/nettomon /data/local/tmp
     
-####Execute
+###Execute
 
 Make the binaries executable.
 
