@@ -8,6 +8,8 @@
 using namespace std;
 using namespace boost;
 
+extern bool printListFormat;
+
 void *startDisplayNetworkSpeedTimer(void *argv);
 void displayNetworkSpeed(const system::error_code &code, asio::deadline_timer *timer);
 
@@ -38,7 +40,12 @@ void *startDisplayNetworkSpeedTimer(void *argv) {
 
 void displayNetworkSpeed(const system::error_code &code, asio::deadline_timer *timer) {
 
-    printf("\rUpload: %7.1lf KB     Download: %7.1lf KB",
+    string printSpeed("Upload: %7.1lf KB     Download: %7.1lf KB");
+
+    printListFormat ?
+            printSpeed = printSpeed + "\n" : printSpeed = "\r" + printSpeed;
+
+    printf(printSpeed.c_str(),
            PacketPayload::getInstance().getUploadedBytes() / 1000.0,
            PacketPayload::getInstance().getDownloadedBytes() / 1000.0);
     fflush(stdout);
