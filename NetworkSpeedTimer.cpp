@@ -41,12 +41,6 @@ void *startDisplayNetworkSpeedTimer(void *argv) {
 
 void displayNetworkSpeed(const system::error_code &code, asio::deadline_timer *timer) {
 
-    if (runDuration != -1) {
-        if (runDuration-- == 0) {
-            exit(0);
-        }
-    }
-
     string printSpeed("Upload: %7.1lf KB     Download: %7.1lf KB");
 
     printListFormat ?
@@ -59,6 +53,12 @@ void displayNetworkSpeed(const system::error_code &code, asio::deadline_timer *t
 
     PacketPayload::getInstance().resetUploadedBytes();
     PacketPayload::getInstance().resetDownloadedBytes();
+
+    if (runDuration != -1) {
+        if (--runDuration == 0) {
+            exit(0);
+        }
+    }
 
     timer->expires_at(timer->expires_at() + posix_time::milliseconds(1000));
     timer->async_wait(bind(displayNetworkSpeed, asio::placeholders::error, timer));
