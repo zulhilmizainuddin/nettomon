@@ -7,6 +7,7 @@
 using namespace std;
 
 bool printListFormat = false;
+int runDuration = -1;
 
 int main(int argc, char* argv[]) {
 
@@ -20,8 +21,22 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
 
-    if (argc > 2 && string(argv[2]) == "-l") {
-        printListFormat = true;
+    for (int i = 2; i < argc; ++i) {
+        if (string(argv[i]) == "-l") {
+            printListFormat = true;
+            continue;
+        }
+
+        if (string(argv[i]) == "-d") {
+            if ((i + 1) < argc && regex_match(argv[++i], regex("^[0-9]++$"))) {
+                runDuration = stoi(argv[i], NULL, 10);
+                continue;
+            }
+            else {
+                perror("Option -d must be followed an integer");
+                exit(1);
+            }
+        }
     }
 
     auto procReadTimer = ProcReadTimer();

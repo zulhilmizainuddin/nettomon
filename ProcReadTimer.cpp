@@ -42,7 +42,7 @@ void *startProcReadTimer(void *argv) {
 
     asio::io_service io;
 
-    asio::deadline_timer timer(io, posix_time::milliseconds(500));
+    asio::deadline_timer timer(io, posix_time::milliseconds(0));
     timer.async_wait(bind(procRead, asio::placeholders::error, &timer, pid));
 
     io.run();

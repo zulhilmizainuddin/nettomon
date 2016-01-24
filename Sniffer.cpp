@@ -27,7 +27,7 @@ void Sniffer::sniff() {
         exit(1);
     }
 
-    pcap_t* packetDescriptor = pcap_open_live(deviceName.c_str(), BUFSIZ, 0, 100, errbuf);
+    pcap_t* packetDescriptor = pcap_open_live(deviceName.c_str(), BUFSIZ, 0, 10, errbuf);
 
     if (packetDescriptor == NULL) {
         perror("Failed to listen to device");
