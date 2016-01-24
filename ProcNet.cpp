@@ -17,16 +17,19 @@ unordered_map<string, NetData> ProcNet::retrieveInodeIpMapping() {
     unordered_map<string, NetData> inodesIpMap;
     inodesIpMap.reserve(100);
 
+    bool firstLine = true;
     while (getline(file, store)) {
-        string header("sl  local_address rem_address   st tx_queue rx_queue tr tm->when retrnsmt   uid  timeout inode");
-        if (store.find(header) == string::npos) {
-            auto first = store.find_first_not_of(" ");
-            auto last = store.find_last_not_of(" ");
-
-            string ipTypeData = store.substr(first, last - first + 1);
-
-            inodesIpMap.insert(extractInodeIpMapping(ipTypeData));
+        if (firstLine) {
+            firstLine = false;
+            continue;
         }
+
+        auto first = store.find_first_not_of(" ");
+        auto last = store.find_last_not_of(" ");
+
+        string ipTypeData = store.substr(first, last - first + 1);
+
+        inodesIpMap.insert(extractInodeIpMapping(ipTypeData));
     }
 
     return inodesIpMap;
