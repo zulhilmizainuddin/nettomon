@@ -1,4 +1,5 @@
 #include <pthread.h>
+#include <thread>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -49,13 +50,38 @@ void *startProcReadTimer(void *argv) {
 }
 
 void procRead(const system::error_code &code, asio::deadline_timer *timer, string pid) {
-    auto socketsInode = ProcFd(pid).getSocketInodeList();
 
-    auto tcpInodeIp = ProcNet("tcp").getInodesIpMap();
-    auto udpInodeIp = ProcNet("udp").getInodesIpMap();
+    vector<string> socketsInode;
+    thread socketInodeThread([&socketsInode](string processId) {
+        socketsInode = ProcFd(processId).getSocketInodeList();
+    }, pid);
 
-    auto tcpNetData = InodeIpHelper::filterProccessIp(socketsInode, tcpInodeIp);
-    auto udpNetData = InodeIpHelper::filterProccessIp(socketsInode, udpInodeIp);
+    unordered_map<string, NetData> tcpInodeIp;
+    thread tcpInodeIpThread([&tcpInodeIp](string ipType) {
+        tcpInodeIp = ProcNet(ipType).getInodesIpMap();
+    }, "tcp");
+
+    unordered_map<string, NetData> udpInodeIp;
+    thread udpInodeIpThread([&udpInodeIp](string ipType) {
+        udpInodeIp = ProcNet(ipType).getInodesIpMap();
+    }, "udp");
+
+    socketInodeThread.join();
+    tcpInodeIpThread.join();
+    udpInodeIpThread.join();
+
+    vector<NetData> tcpNetData;
+    thread tcpNetDataThread([&tcpNetData](vector<string> socketInodes, unordered_map<string, NetData> inodeIps) {
+        tcpNetData = InodeIpHelper().filterProccessIp(socketInodes, inodeIps);
+    }, socketsInode, tcpInodeIp);
+
+    vector<NetData> udpNetData;
+    thread udpNetDataThread([&udpNetData](vector<string> socketInodes, unordered_map<string, NetData> inodeIps) {
+        udpNetData = InodeIpHelper().filterProccessIp(socketInodes, inodeIps);
+    }, socketsInode, udpInodeIp);
+
+    tcpNetDataThread.join();
+    udpNetDataThread.join();
 
     procNetPublisher->setNetData(tcpNetData, udpNetData);
     procNetPublisher->notifyObservers();
