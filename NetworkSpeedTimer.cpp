@@ -1,4 +1,4 @@
-#include <pthread.h>
+#include <thread>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -11,32 +11,20 @@ using namespace boost;
 extern bool printListFormat;
 extern int runDuration;
 
-void *startDisplayNetworkSpeedTimer(void *argv);
 void displayNetworkSpeed(const system::error_code &code, asio::deadline_timer *timer);
 
 void NetworkSpeedTimer::start() {
-    pthread_t thread;
 
-    int threadStatus = pthread_create(&thread, NULL, startDisplayNetworkSpeedTimer, NULL);
+    thread networkSpeedThread([]() {
+        asio::io_service io;
 
-    if  (threadStatus != 0) {
-        perror("Failed to create network speed thread");
-        exit(1);
-    }
+        asio::deadline_timer timer(io, posix_time::milliseconds(1000));
+        timer.async_wait(bind(displayNetworkSpeed, asio::placeholders::error, &timer));
 
-    if (pthread_detach(thread) != 0) {
-        perror("Failed to detach network speed thread");
-    }
+        io.run();
+    });
 
-}
-
-void *startDisplayNetworkSpeedTimer(void *argv) {
-    asio::io_service io;
-
-    asio::deadline_timer timer(io, posix_time::milliseconds(1000));
-    timer.async_wait(bind(displayNetworkSpeed, asio::placeholders::error, &timer));
-
-    io.run();
+    networkSpeedThread.detach();
 }
 
 void displayNetworkSpeed(const system::error_code &code, asio::deadline_timer *timer) {

@@ -1,15 +1,17 @@
 #ifndef NETTOMON_PAYLOAD_H
 #define NETTOMON_PAYLOAD_H
 
-#include <pthread.h>
+#include <mutex>
+
+using namespace std;
 
 class PacketPayload {
 private:
     volatile unsigned long uploadedBytes;
     volatile unsigned long downloadedBytes;
 
-    pthread_mutex_t uploadMutex = PTHREAD_MUTEX_INITIALIZER;
-    pthread_mutex_t downloadMutex = PTHREAD_MUTEX_INITIALIZER;
+    mutex uploadMutex;
+    mutex downloadMutex;
 
 public:
     static PacketPayload & getInstance() {
@@ -18,43 +20,43 @@ public:
     }
 
     void resetUploadedBytes() {
-        pthread_mutex_lock(&uploadMutex);
+        uploadMutex.lock();
         PacketPayload::uploadedBytes = 0;
-        pthread_mutex_unlock(&uploadMutex);
+        uploadMutex.unlock();
     }
 
     unsigned long getUploadedBytes() {
-        pthread_mutex_lock(&uploadMutex);
+        uploadMutex.lock();
         auto uploadedBytesTemp = uploadedBytes;
-        pthread_mutex_unlock(&uploadMutex);
+        uploadMutex.unlock();
 
         return uploadedBytesTemp;
     }
 
     void addUploadedBytes(unsigned long uploadedBytes) {
-        pthread_mutex_lock(&uploadMutex);
+        uploadMutex.lock();
         PacketPayload::uploadedBytes += uploadedBytes;
-        pthread_mutex_unlock(&uploadMutex);
+        uploadMutex.unlock();
     }
 
     void resetDownloadedBytes() {
-        pthread_mutex_lock(&downloadMutex);
+        downloadMutex.lock();
         PacketPayload::downloadedBytes = 0;
-        pthread_mutex_unlock(&downloadMutex);
+        downloadMutex.unlock();
     }
 
     unsigned long getDownloadedBytes() {
-        pthread_mutex_lock(&downloadMutex);
+        downloadMutex.lock();
         auto downloadedBytesTemp = downloadedBytes;
-        pthread_mutex_unlock(&downloadMutex);
+        downloadMutex.unlock();
 
         return downloadedBytesTemp;
     }
 
     void addDownloadedBytes(unsigned long downloadedBytes) {
-        pthread_mutex_lock(&downloadMutex);
+        downloadMutex.lock();
         PacketPayload::downloadedBytes += downloadedBytes;
-        pthread_mutex_unlock(&downloadMutex);
+        downloadMutex.unlock();
     }
 
 private:

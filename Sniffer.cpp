@@ -2,7 +2,7 @@
 #include <arpa/inet.h>
 #include <netinet/ether.h>
 #include <netinet/ip.h>
-#include <pthread.h>
+#include <mutex>
 #include "TcpProcessor.h"
 #include "UdpProcessor.h"
 #include "Sniffer.h"
@@ -10,7 +10,7 @@
 vector<NetData> tcpNetData;
 vector<NetData> udpNetData;
 
-pthread_mutex_t netDataMutex = PTHREAD_MUTEX_INITIALIZER;
+mutex netDataMutex;
 
 Sniffer::Sniffer(ProcNetPublisher *procPublisher) {
     this->procPublisher = procPublisher;
@@ -42,14 +42,14 @@ void Sniffer::sniff() {
 
         switch (ipHeader->ip_p) {
             case IPPROTO_TCP:
-                pthread_mutex_lock(&netDataMutex);
+                netDataMutex.lock();
                 TcpProcessor().process(srcIp, dstIp, pkthdr, packet, tcpNetData);
-                pthread_mutex_unlock(&netDataMutex);
+                netDataMutex.unlock();
                 break;
             case IPPROTO_UDP:
-                pthread_mutex_lock(&netDataMutex);
+                netDataMutex.lock();
                 UdpProcessor().process(srcIp, dstIp, pkthdr, packet, udpNetData);
-                pthread_mutex_unlock(&netDataMutex);
+                netDataMutex.unlock();
                 break;
             default:
                 return;
@@ -60,8 +60,8 @@ void Sniffer::sniff() {
 
 
 void Sniffer::updateNetData(vector<NetData> tcpNetData, vector<NetData> udpNetData) {
-    pthread_mutex_lock(&netDataMutex);
+    netDataMutex.lock();
     ::tcpNetData = tcpNetData;
     ::udpNetData = udpNetData;
-    pthread_mutex_unlock(&netDataMutex);
+    netDataMutex.unlock();
 }

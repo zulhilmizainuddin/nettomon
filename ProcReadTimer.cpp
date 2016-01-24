@@ -1,4 +1,3 @@
-#include <pthread.h>
 #include <thread>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
@@ -13,7 +12,6 @@
 using namespace std;
 using namespace boost;
 
-void *startProcReadTimer(void *argv);
 void procRead(const system::error_code &code, asio::deadline_timer *timer, string pid);
 
 ProcNetPublisher* procNetPublisher;
@@ -23,30 +21,17 @@ ProcReadTimer::ProcReadTimer() {
 }
 
 void ProcReadTimer::start(const char *pid) {
-    pthread_t thread;
 
-    int threadStatus = pthread_create(&thread, NULL, startProcReadTimer, (void*)pid);
+    thread procReadThread([](const char* processId) {
+        asio::io_service io;
 
-    if  (threadStatus != 0) {
-        perror("Failed to create proc read thread");
-        exit(1);
-    }
+        asio::deadline_timer timer(io, posix_time::milliseconds(0));
+        timer.async_wait(bind(procRead, asio::placeholders::error, &timer, processId));
 
-    if (pthread_detach(thread) != 0) {
-        perror("Failed to detach proc read thread");
-    }
+        io.run();
+    }, pid);
 
-}
-
-void *startProcReadTimer(void *argv) {
-    string pid = (const char*)argv;
-
-    asio::io_service io;
-
-    asio::deadline_timer timer(io, posix_time::milliseconds(0));
-    timer.async_wait(bind(procRead, asio::placeholders::error, &timer, pid));
-
-    io.run();
+    procReadThread.detach();
 }
 
 void procRead(const system::error_code &code, asio::deadline_timer *timer, string pid) {
