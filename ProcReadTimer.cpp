@@ -1,4 +1,5 @@
 #include <thread>
+#include <future>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -36,37 +37,24 @@ void ProcReadTimer::start(const char *pid) {
 
 void procRead(const system::error_code &code, asio::deadline_timer *timer, string pid) {
 
-    vector<string> socketsInode;
-    thread socketInodeThread([&socketsInode](string processId) {
-        socketsInode = ProcFd(processId).getSocketInodeList();
-    }, pid);
+    ProcFd procFd(pid);
+    auto socketsInodeFuture = async(&ProcFd::getSocketInodeList, &procFd);
 
-    unordered_map<string, NetData> tcpInodeIp;
-    thread tcpInodeIpThread([&tcpInodeIp](string ipType) {
-        tcpInodeIp = ProcNet(ipType).getInodesIpMap();
-    }, "tcp");
+    ProcNet procNetTcp("tcp");
+    auto tcpInodeIpFuture = async(&ProcNet::getInodesIpMap, &procNetTcp);
 
-    unordered_map<string, NetData> udpInodeIp;
-    thread udpInodeIpThread([&udpInodeIp](string ipType) {
-        udpInodeIp = ProcNet(ipType).getInodesIpMap();
-    }, "udp");
+    ProcNet procNetUdp("udp");
+    auto udpInodeIpFuture = async(&ProcNet::getInodesIpMap, &procNetUdp);
 
-    socketInodeThread.join();
-    tcpInodeIpThread.join();
-    udpInodeIpThread.join();
+    auto socketsInode = socketsInodeFuture.get();
+    auto tcpInodeIp = tcpInodeIpFuture.get();
+    auto udpInodeIp = udpInodeIpFuture.get();
 
-    vector<NetData> tcpNetData;
-    thread tcpNetDataThread([&tcpNetData](vector<string> socketInodes, unordered_map<string, NetData> inodeIps) {
-        tcpNetData = InodeIpHelper().filterProccessIp(socketInodes, inodeIps);
-    }, socketsInode, tcpInodeIp);
+    auto tcpNetDataFuture = async(&InodeIpHelper::filterProccessIp, socketsInode, tcpInodeIp);
+    auto udpNetDataFuture = async(&InodeIpHelper::filterProccessIp, socketsInode, udpInodeIp);
 
-    vector<NetData> udpNetData;
-    thread udpNetDataThread([&udpNetData](vector<string> socketInodes, unordered_map<string, NetData> inodeIps) {
-        udpNetData = InodeIpHelper().filterProccessIp(socketInodes, inodeIps);
-    }, socketsInode, udpInodeIp);
-
-    tcpNetDataThread.join();
-    udpNetDataThread.join();
+    auto tcpNetData = tcpNetDataFuture.get();
+    auto udpNetData = udpNetDataFuture.get();
 
     procNetPublisher->setNetData(tcpNetData, udpNetData);
     procNetPublisher->notifyObservers();
