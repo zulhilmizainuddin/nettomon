@@ -48,7 +48,7 @@ Download and extract <a href="https://www.crystax.net/download/crystax-ndk-10.3.
 
 Add CrystaX NDK to the PATH variable in .bashrc.
 
-    PATH=$PATH:~/crystax-ndk-10.3.1-linux-x86_64/crystax-ndk-10.3.1/
+    PATH=$PATH:~/crystax-ndk-10.3.1/
     
 ###Get the source code
 
