@@ -13,4 +13,4 @@ before_install:
   - sudo apt-get -y install libpcap-dev
 
 script:
-  - ./build.sh
+  - ./build.sh 4
