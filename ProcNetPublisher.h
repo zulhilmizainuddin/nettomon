@@ -16,7 +16,7 @@ private:
     vector<NetData> udpNetData;
 
 public:
-    void setNetData(vector<NetData> tcpNetData, vector<NetData> udpNetData);
+    void setNetData(const vector<NetData>& tcpNetData, const vector<NetData>& udpNetData);
     void registerObserver(ProcNetObserver * observer);
     void notifyObservers();
 };

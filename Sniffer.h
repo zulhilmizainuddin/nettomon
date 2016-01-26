@@ -13,7 +13,7 @@ public:
     Sniffer(ProcNetPublisher *procPublisher);
 
     void sniff();
-    virtual void updateNetData(vector<NetData> tcpNetData, vector<NetData> udpNetData);
+    virtual void updateNetData(const vector<NetData>& tcpNetData, const vector<NetData>& udpNetData);
 };
 
 

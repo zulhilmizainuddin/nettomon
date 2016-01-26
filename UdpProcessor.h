@@ -6,8 +6,8 @@
 
 class UdpProcessor : PacketProcessor {
 public:
-    virtual void process(string srcIp, string dstIp, const struct pcap_pkthdr *pkthdr, const u_char *packet,
-                         vector<NetData> netData);
+    virtual void process(const string& srcIp, const string& dstIp, const struct pcap_pkthdr *pkthdr, const u_char *packet,
+                         const vector<NetData>& netData);
 };
 
 

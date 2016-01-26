@@ -24,18 +24,13 @@ unordered_map<string, NetData> ProcNet::retrieveInodeIpMapping() {
             continue;
         }
 
-        auto first = store.find_first_not_of(" ");
-        auto last = store.find_last_not_of(" ");
-
-        string ipTypeData = store.substr(first, last - first + 1);
-
-        inodesIpMap.insert(extractInodeIpMapping(ipTypeData));
+        inodesIpMap.insert(extractInodeIpMapping(store));
     }
 
     return inodesIpMap;
 }
 
-pair<string, NetData> ProcNet::extractInodeIpMapping(string ipTypeData) {
+pair<string, NetData> ProcNet::extractInodeIpMapping(const string &ipTypeData) {
     regex ipTypeDataRegex("\\d++:\\s([0-9A-Z]{8}):([0-9A-Z]{4})\\s([0-9A-Z]{8}):([0-9A-Z]{4})(?:\\s++[0-9A-Z:]++){6}\\s([0-9]++)");
     smatch match;
 

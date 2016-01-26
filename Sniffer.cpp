@@ -59,7 +59,7 @@ void Sniffer::sniff() {
 }
 
 
-void Sniffer::updateNetData(vector<NetData> tcpNetData, vector<NetData> udpNetData) {
+void Sniffer::updateNetData(const vector<NetData>& tcpNetData, const vector<NetData>& udpNetData) {
     netDataMutex.lock();
     ::tcpNetData = tcpNetData;
     ::udpNetData = udpNetData;

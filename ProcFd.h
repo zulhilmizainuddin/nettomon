@@ -16,7 +16,7 @@ public:
 
 private:
     vector<string> retrieveSocketsInode();
-    string extractSocketInode(string symlinkContent);
+    string extractSocketInode(const string &symlinkContent);
 };
 
 

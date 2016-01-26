@@ -19,7 +19,7 @@ public:
 
 private:
     unordered_map<string, NetData> retrieveInodeIpMapping();
-    pair<string, NetData> extractInodeIpMapping(string ipTypeData);
+    pair<string, NetData> extractInodeIpMapping(const string &ipTypeData);
 };
 
 

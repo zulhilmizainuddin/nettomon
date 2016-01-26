@@ -6,8 +6,8 @@
 #include "UdpProcessor.h"
 
 
-void UdpProcessor::process(string srcIp, string dstIp, const struct pcap_pkthdr *pkthdr, const u_char *packet,
-                           vector<NetData> netData) {
+void UdpProcessor::process(const string& srcIp, const string& dstIp, const struct pcap_pkthdr *pkthdr, const u_char *packet,
+                           const vector<NetData>& netData) {
     struct udphdr* udpHeader =
             (struct udphdr*)(packet + sizeof(struct ether_header) + sizeof(struct ip));
 

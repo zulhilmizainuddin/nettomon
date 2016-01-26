@@ -13,7 +13,7 @@
 using namespace std;
 using namespace boost;
 
-void procRead(const system::error_code &code, asio::deadline_timer *timer, string pid);
+void procRead(const system::error_code &code, asio::deadline_timer *timer, const string& pid);
 
 ProcNetPublisher* procNetPublisher;
 
@@ -35,7 +35,7 @@ void ProcReadTimer::start(const char *pid) {
     procReadThread.detach();
 }
 
-void procRead(const system::error_code &code, asio::deadline_timer *timer, string pid) {
+void procRead(const system::error_code &code, asio::deadline_timer *timer, const string& pid) {
 
     ProcFd procFd(pid);
     auto socketsInodeFuture = async(&ProcFd::getSocketInodeList, &procFd);

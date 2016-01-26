@@ -6,8 +6,8 @@
 #include "TcpProcessor.h"
 
 
-void TcpProcessor::process(string srcIp, string dstIp, const struct pcap_pkthdr *pkthdr, const u_char *packet,
-                           vector<NetData> netData) {
+void TcpProcessor::process(const string& srcIp, const string& dstIp, const struct pcap_pkthdr *pkthdr, const u_char *packet,
+                           const vector<NetData>& netData) {
     struct tcphdr* tcpHeader =
             (struct tcphdr*)(packet + sizeof(struct ether_header) + sizeof(struct ip));
 

@@ -1,6 +1,6 @@
 #include "InodeIpHelper.h"
 
-vector<NetData> InodeIpHelper::filterProccessIp(vector<string> socketInodes, unordered_map<string, NetData> inodeIps) {
+vector<NetData> InodeIpHelper::filterProccessIp(const vector<string>& socketInodes, const unordered_map<string, NetData>& inodeIps) {
     vector<NetData> filteredResult;
     filteredResult.reserve(100);
 

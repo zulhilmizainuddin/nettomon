@@ -38,8 +38,8 @@ vector<string> ProcFd::retrieveSocketsInode() {
     return socketInodeList;
 }
 
-string ProcFd::extractSocketInode(string symlinkContent) {
-    regex socketInodeRegex("socket:\\[([0-9]++)\\]");
+string ProcFd::extractSocketInode(const string &symlinkContent) {
+    regex socketInodeRegex("^socket:\\[([0-9]++)\\]");
     smatch match;
 
     string socketInode;

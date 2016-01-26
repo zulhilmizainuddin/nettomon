@@ -1,6 +1,6 @@
 #include "ProcNetPublisher.h"
 
-void ProcNetPublisher::setNetData(vector<NetData> tcpNetData, vector<NetData> udpNetData) {
+void ProcNetPublisher::setNetData(const vector<NetData>& tcpNetData, const vector<NetData>& udpNetData) {
     this->tcpNetData = tcpNetData;
     this->udpNetData = udpNetData;
 }
