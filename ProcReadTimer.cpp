@@ -38,20 +38,20 @@ void ProcReadTimer::start(const char *pid) {
 void procRead(const system::error_code &code, asio::deadline_timer *timer, const string& pid) {
 
     ProcFd procFd(pid);
-    auto socketsInodeFuture = async(&ProcFd::getSocketInodeList, &procFd);
+    auto socketsInodeFuture = async(launch::async, &ProcFd::getSocketInodeList, &procFd);
 
     ProcNet procNetTcp("tcp");
-    auto tcpInodeIpFuture = async(&ProcNet::getInodesIpMap, &procNetTcp);
+    auto tcpInodeIpFuture = async(launch::async, &ProcNet::getInodesIpMap, &procNetTcp);
 
     ProcNet procNetUdp("udp");
-    auto udpInodeIpFuture = async(&ProcNet::getInodesIpMap, &procNetUdp);
+    auto udpInodeIpFuture = async(launch::async, &ProcNet::getInodesIpMap, &procNetUdp);
 
     auto socketsInode = socketsInodeFuture.get();
     auto tcpInodeIp = tcpInodeIpFuture.get();
     auto udpInodeIp = udpInodeIpFuture.get();
 
-    auto tcpNetDataFuture = async(&InodeIpHelper::filterProccessIp, socketsInode, tcpInodeIp);
-    auto udpNetDataFuture = async(&InodeIpHelper::filterProccessIp, socketsInode, udpInodeIp);
+    auto tcpNetDataFuture = async(launch::async, &InodeIpHelper::filterProccessIp, socketsInode, tcpInodeIp);
+    auto udpNetDataFuture = async(launch::async, &InodeIpHelper::filterProccessIp, socketsInode, udpInodeIp);
 
     auto tcpNetData = tcpNetDataFuture.get();
     auto udpNetData = udpNetDataFuture.get();
