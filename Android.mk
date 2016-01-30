@@ -13,9 +13,9 @@ LOCAL_SRC_FILES :=\
         TcpProcessor.cpp\
         UdpProcessor.cpp\
         ProcNetPublisher.cpp\
-        ProcNetObserver.cpp\
         ProcReadTimer.cpp\
-        NetworkSpeedTimer.cpp
+        NetworkSpeedTimer.cpp\
+        InputValidation.cpp
 
 LOCAL_CFLAGS := -O3
 LOCAL_C_INCLUDES := $(LOCAL_PATH) $(LOCAL_PATH)/libpcap
