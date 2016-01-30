@@ -16,10 +16,10 @@ set(SOURCE_FILES
         PacketPayload.h
         UdpProcessor.cpp UdpProcessor.h
         ProcNetPublisher.cpp ProcNetPublisher.h
-        ProcNetObserver.cpp ProcNetObserver.h
+        ProcNetObserver.h
         ProcReadTimer.cpp ProcReadTimer.h
-        ProcReadTimerData.h
-        NetworkSpeedTimer.cpp NetworkSpeedTimer.h)
+        NetworkSpeedTimer.cpp NetworkSpeedTimer.h
+        InputValidation.cpp InputValidation.h)
 
 find_path(PCAP_ROOT_DIR NAMES include/pcap.h)
 find_path(PCAP_INCLUDE_DIR NAMES pcap.h HINTS ${PCAP_ROOT_DIR}/include)
