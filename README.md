@@ -76,10 +76,8 @@ Make the binaries executable.
 
     $ chmod 755 libcrystax.so libgnustl_shared.so nettomon
     
-Run as superuser. Nettomon must be executed with superuser permission as it is using libpcap for the network monitoring. Make sure the device is rooted.
+Nettomon must be executed with superuser permission as it is using libpcap for the network monitoring. **Make sure the device is rooted.**
 
-    $ su
-    
 Execute the program by passing it the pid of the process to be monitored.
 
-    # LD_LIBRARY_PATH=/data/local/tmp ./nettomon <pid>
+    $ su -c LD_LIBRARY_PATH=/data/local/tmp ./data/local/tmp/nettomon <pid>
