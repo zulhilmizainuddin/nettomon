@@ -14,29 +14,26 @@ void UdpProcessor::process(const string& srcIp, const string& dstIp, const struc
     auto srcPort = ntohs(udpHeader->source);
     auto dstPort = ntohs(udpHeader->dest);
 
-    for (auto data: netData) {
+    #pragma omp parallel for
+    for (int i = 0; i < netData.size(); ++i) {
         struct in_addr localAddr;
         struct in_addr remoteAddr;
 
-        localAddr.s_addr = stoul(data.localIp, NULL, 16);
-        remoteAddr.s_addr = stoul(data.remoteIp, NULL, 16);
+        localAddr.s_addr = stoul(netData[i].localIp, NULL, 16);
+        remoteAddr.s_addr = stoul(netData[i].remoteIp, NULL, 16);
 
         string localIp = inet_ntoa(localAddr);
         string remoteIp = inet_ntoa(remoteAddr);
 
-        auto localPort = stoul(data.localPort, NULL, 16);
-        auto remotePort = stoul(data.remotePort, NULL, 16);
+        auto localPort = stoul(netData[i].localPort, NULL, 16);
+        auto remotePort = stoul(netData[i].remotePort, NULL, 16);
 
         if (srcIp == localIp && srcPort == localPort && dstIp == remoteIp && dstPort == remotePort) {
             PacketPayload::getInstance().addUploadedBytes(pkthdr->len);
-            /*printf("%s:%d->%s:%d upload:%d\n", srcIp.c_str(), srcPort, dstIp.c_str(), dstPort, pkthdr->len);*/
-            break;
         }
 
         if (srcIp == remoteIp && srcPort == remotePort && dstIp == localIp && dstPort == localPort) {
             PacketPayload::getInstance().addDownloadedBytes(pkthdr->len);
-            /*printf("%s:%d->%s:%d download:%d\n", srcIp.c_str(), srcPort, dstIp.c_str(), dstPort, pkthdr->len);*/
-            break;
         }
     }
 }

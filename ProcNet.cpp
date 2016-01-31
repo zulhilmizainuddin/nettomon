@@ -33,7 +33,9 @@ unordered_map<string, NetData> ProcNet::retrieveInodeIpMapping() {
 
     #pragma omp parallel for
     for (int i = 0; i < fileContentList.size(); ++i) {
-        inodesIpMap.insert(extractInodeIpMapping(fileContentList[i]));
+        auto inodeIpMap = extractInodeIpMapping(fileContentList[i]);
+        #pragma omp critical
+        inodesIpMap.insert(move(inodeIpMap));
     }
 
     return inodesIpMap;

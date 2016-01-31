@@ -37,24 +37,33 @@ void ProcReadTimer::start(const char *pid) {
 
 void procRead(const system::error_code &code, asio::deadline_timer *timer, const string& pid) {
 
-    ProcFd procFd(pid);
-    auto socketsInodeFuture = async(launch::async, &ProcFd::getSocketInodeList, &procFd);
+    vector<string> socketsInode;
+    unordered_map<string, NetData> tcpInodeIp;
+    unordered_map<string, NetData> udpInodeIp;
 
-    ProcNet procNetTcp("tcp");
-    auto tcpInodeIpFuture = async(launch::async, &ProcNet::getInodesIpMap, &procNetTcp);
+    #pragma omp parallel sections
+    {
+        #pragma omp section
+        socketsInode = ProcFd(pid).getSocketInodeList();
 
-    ProcNet procNetUdp("udp");
-    auto udpInodeIpFuture = async(launch::async, &ProcNet::getInodesIpMap, &procNetUdp);
+        #pragma omp section
+        tcpInodeIp = ProcNet("tcp").getInodesIpMap();
 
-    auto socketsInode = socketsInodeFuture.get();
-    auto tcpInodeIp = tcpInodeIpFuture.get();
-    auto udpInodeIp = udpInodeIpFuture.get();
+        #pragma omp section
+        udpInodeIp = ProcNet("udp").getInodesIpMap();
+    }
 
-    auto tcpNetDataFuture = async(launch::async, &InodeIpHelper::filterProccessIp, socketsInode, tcpInodeIp);
-    auto udpNetDataFuture = async(launch::async, &InodeIpHelper::filterProccessIp, socketsInode, udpInodeIp);
+    vector<NetData> tcpNetData;
+    vector<NetData> udpNetData;
 
-    auto tcpNetData = tcpNetDataFuture.get();
-    auto udpNetData = udpNetDataFuture.get();
+    #pragma omp parallel sections
+    {
+        #pragma omp section
+        tcpNetData = InodeIpHelper::filterProccessIp(socketsInode, tcpInodeIp);
+
+        #pragma omp section
+        udpNetData = InodeIpHelper::filterProccessIp(socketsInode, udpInodeIp);
+    }
 
     procNetPublisher->setNetData(tcpNetData, udpNetData);
     procNetPublisher->notifyObservers();

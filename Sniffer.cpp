@@ -41,16 +41,30 @@ void Sniffer::sniff() {
         string dstIp = inet_ntoa(ipHeader->ip_dst);
 
         switch (ipHeader->ip_p) {
-            case IPPROTO_TCP:
+            case IPPROTO_TCP: {
                 netDataMutex.lock();
-                TcpProcessor().process(srcIp, dstIp, pkthdr, packet, tcpNetData);
+                auto tcpNetDataTemp(tcpNetData);
                 netDataMutex.unlock();
+
+                #pragma omp sections nowait
+                {
+                    #pragma omp section
+                    TcpProcessor().process(srcIp, dstIp, pkthdr, packet, tcpNetDataTemp);
+                }
                 break;
-            case IPPROTO_UDP:
+            }
+            case IPPROTO_UDP: {
                 netDataMutex.lock();
-                UdpProcessor().process(srcIp, dstIp, pkthdr, packet, udpNetData);
+                auto udpNetDataTemp(udpNetData);
                 netDataMutex.unlock();
+
+                #pragma omp sections nowait
+                {
+                    #pragma omp section
+                    UdpProcessor().process(srcIp, dstIp, pkthdr, packet, udpNetDataTemp);
+                }
                 break;
+            }
             default:
                 return;
         }

@@ -4,9 +4,11 @@ vector<NetData> InodeIpHelper::filterProccessIp(const vector<string>& socketInod
     vector<NetData> filteredResult;
     filteredResult.reserve(100);
 
-    for (auto socketInode: socketInodes) {
-        auto inodeIp = inodeIps.find(socketInode);
+    #pragma omp parallel for
+    for (int i = 0; i < socketInodes.size(); ++i) {
+        auto inodeIp = inodeIps.find(socketInodes[i]);
         if (inodeIp != inodeIps.end()) {
+            #pragma omp critical
             filteredResult.push_back(inodeIp->second);
         }
     }
