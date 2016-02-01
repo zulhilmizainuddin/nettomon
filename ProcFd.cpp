@@ -37,7 +37,7 @@ vector<string> ProcFd::retrieveSocketsInode() {
     for (int i = 0; i < symlinkList.size() ; ++i) {
         string socketInode = extractSocketInode(symlinkList[i]);
         if (!socketInode.empty()) {
-            #pragma omp critical
+            #pragma omp critical(socketinode)
             socketInodeList.push_back(move(socketInode));
         }
     }

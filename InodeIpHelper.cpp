@@ -8,7 +8,7 @@ vector<NetData> InodeIpHelper::filterProccessIp(const vector<string>& socketInod
     for (int i = 0; i < socketInodes.size(); ++i) {
         auto inodeIp = inodeIps.find(socketInodes[i]);
         if (inodeIp != inodeIps.end()) {
-            #pragma omp critical
+            #pragma omp critical(inodeip)
             filteredResult.push_back(inodeIp->second);
         }
     }
