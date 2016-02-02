@@ -29,10 +29,12 @@ void TcpProcessor::process(const string& srcIp, const string& dstIp, const struc
         auto remotePort = stoul(netData[i].remotePort, NULL, 16);
 
         if (srcIp == localIp && srcPort == localPort && dstIp == remoteIp && dstPort == remotePort) {
+            #pragma omp critical(tcpUploadPayload)
             PacketPayload::getInstance().addUploadedBytes(pkthdr->len);
         }
 
         if (srcIp == remoteIp && srcPort == remotePort && dstIp == localIp && dstPort == localPort) {
+            #pragma omp critical(tcpDownloadPayload)
             PacketPayload::getInstance().addDownloadedBytes(pkthdr->len);
         }
     }
