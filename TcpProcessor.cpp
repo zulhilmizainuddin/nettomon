@@ -30,12 +30,12 @@ void TcpProcessor::process(const string& srcIp, const string& dstIp, const struc
 
         if (srcIp == localIp && srcPort == localPort && dstIp == remoteIp && dstPort == remotePort) {
             #pragma omp critical(tcpUploadPayload)
-            PacketPayload::getInstance().addUploadedBytes(pkthdr->len);
+            PacketPayload::getInstance().addUploadedBytes(pkthdr->caplen);
         }
 
         if (srcIp == remoteIp && srcPort == remotePort && dstIp == localIp && dstPort == localPort) {
             #pragma omp critical(tcpDownloadPayload)
-            PacketPayload::getInstance().addDownloadedBytes(pkthdr->len);
+            PacketPayload::getInstance().addDownloadedBytes(pkthdr->caplen);
         }
     }
 }
