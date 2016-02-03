@@ -14,11 +14,7 @@ unordered_map<string, NetData> ProcNet::retrieveInodeIpMapping() {
 
     ifstream file(filename);
     string store;
-
-    vector<string> fileContentList;
     unordered_map<string, NetData> inodesIpMap;
-
-    fileContentList.reserve(100);
     inodesIpMap.reserve(100);
 
     bool firstLine = true;
@@ -28,14 +24,7 @@ unordered_map<string, NetData> ProcNet::retrieveInodeIpMapping() {
             continue;
         }
 
-        fileContentList.push_back(move(store));
-    }
-
-    #pragma omp parallel for
-    for (int i = 0; i < fileContentList.size(); ++i) {
-        auto inodeIpMap = extractInodeIpMapping(fileContentList[i]);
-        #pragma omp critical(inodeipmap)
-        inodesIpMap.insert(move(inodeIpMap));
+        inodesIpMap.insert(move(extractInodeIpMapping(store)));
     }
 
     return inodesIpMap;
@@ -49,10 +38,10 @@ pair<string, NetData> ProcNet::extractInodeIpMapping(const string &ipTypeData) {
     if (regex_search(ipTypeData, match, ipTypeDataRegex)) {
 
         netData = {
-            match[1].str().c_str(),
-            match[2].str().c_str(),
-            match[3].str().c_str(),
-            match[4].str().c_str()
+                match[1].str().c_str(),
+                match[2].str().c_str(),
+                match[3].str().c_str(),
+                match[4].str().c_str()
         };
     }
 

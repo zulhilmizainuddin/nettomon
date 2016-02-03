@@ -14,28 +14,27 @@ void UdpProcessor::process(const string& srcIp, const string& dstIp, const struc
     auto srcPort = ntohs(udpHeader->source);
     auto dstPort = ntohs(udpHeader->dest);
 
-    #pragma omp parallel for
-    for (int i = 0; i < netData.size(); ++i) {
+    for (auto data: netData) {
         struct in_addr localAddr;
         struct in_addr remoteAddr;
 
-        localAddr.s_addr = stoul(netData[i].localIp, NULL, 16);
-        remoteAddr.s_addr = stoul(netData[i].remoteIp, NULL, 16);
+        localAddr.s_addr = (uint32_t)stoul(data.localIp, NULL, 16);
+        remoteAddr.s_addr = (uint32_t)stoul(data.remoteIp, NULL, 16);
 
         string localIp = inet_ntoa(localAddr);
         string remoteIp = inet_ntoa(remoteAddr);
 
-        auto localPort = stoul(netData[i].localPort, NULL, 16);
-        auto remotePort = stoul(netData[i].remotePort, NULL, 16);
+        auto localPort = stoul(data.localPort, NULL, 16);
+        auto remotePort = stoul(data.remotePort, NULL, 16);
 
         if (srcIp == localIp && srcPort == localPort && dstIp == remoteIp && dstPort == remotePort) {
-            #pragma omp critical(udpUploadPayload)
             PacketPayload::getInstance().addUploadedBytes(pkthdr->caplen);
+            break;
         }
 
         if (srcIp == remoteIp && srcPort == remotePort && dstIp == localIp && dstPort == localPort) {
-            #pragma omp critical(udpDownloadPayload)
             PacketPayload::getInstance().addDownloadedBytes(pkthdr->caplen);
+            break;
         }
     }
 }

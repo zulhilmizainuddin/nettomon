@@ -46,11 +46,7 @@ void Sniffer::sniff() {
                 auto tcpNetDataTemp(tcpNetData);
                 netDataMutex.unlock();
 
-                #pragma omp sections nowait
-                {
-                    #pragma omp section
-                    TcpProcessor().process(srcIp, dstIp, pkthdr, packet, tcpNetDataTemp);
-                }
+                TcpProcessor().process(srcIp, dstIp, pkthdr, packet, tcpNetDataTemp);
                 break;
             }
             case IPPROTO_UDP: {
@@ -58,11 +54,7 @@ void Sniffer::sniff() {
                 auto udpNetDataTemp(udpNetData);
                 netDataMutex.unlock();
 
-                #pragma omp sections nowait
-                {
-                    #pragma omp section
-                    UdpProcessor().process(srcIp, dstIp, pkthdr, packet, udpNetDataTemp);
-                }
+                UdpProcessor().process(srcIp, dstIp, pkthdr, packet, udpNetDataTemp);
                 break;
             }
             default:

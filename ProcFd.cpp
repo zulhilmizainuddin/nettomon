@@ -18,10 +18,7 @@ vector<string> ProcFd::retrieveSocketsInode() {
         exit(1);
     }
 
-    vector<string> symlinkList;
     vector<string> socketInodeList;
-
-    symlinkList.reserve(100);
     socketInodeList.reserve(100);
 
     while (struct dirent* symlink = readdir(directory)) {
@@ -29,16 +26,10 @@ vector<string> ProcFd::retrieveSocketsInode() {
 
         char symlinkContent[BUFSIZ];
         if (readlink(symlinkName.c_str(), symlinkContent, sizeof(symlinkContent)) != -1) {
-            symlinkList.push_back(move(symlinkContent));
-        }
-    }
-
-    #pragma omp parallel for
-    for (int i = 0; i < symlinkList.size() ; ++i) {
-        string socketInode = extractSocketInode(symlinkList[i]);
-        if (!socketInode.empty()) {
-            #pragma omp critical(socketinode)
-            socketInodeList.push_back(move(socketInode));
+            string socketInode = extractSocketInode(symlinkContent);
+            if (socketInode.size() != 0) {
+                socketInodeList.push_back(move(socketInode));
+            }
         }
     }
 
