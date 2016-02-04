@@ -10,13 +10,13 @@ Currently supports IPv4.
 
 Install the dependencies:
 
-    $ sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-    $ sudo apt-get -y update
-    $ sudo apt-get -y install build-essential
-    $ sudo apt-get -y install cmake
-    $ sudo apt-get -y install g++-4.9
-    $ sudo apt-get -y install libboost-all-dev
-    $ sudo apt-get -y install libpcap-dev
+    sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+    sudo apt-get -y update
+    sudo apt-get -y install build-essential
+    sudo apt-get -y install cmake
+    sudo apt-get -y install g++-4.9
+    sudo apt-get -y install libboost-all-dev
+    sudo apt-get -y install libpcap-dev
     
 Edit CMakeLists.txt if using different version of the dependencies.
 
@@ -24,13 +24,13 @@ Edit CMakeLists.txt if using different version of the dependencies.
 
 Clone the repository.
 
-    $ git clone https://github.com/zulhilmizainuddin/nettomon.git nettomon
+    git clone https://github.com/zulhilmizainuddin/nettomon.git nettomon
 
 ###Build
 
 Run build.sh. The nettomon binary will be located under the build directory:
 
-    $ ./build.sh
+    ./build.sh <number of build workers>
     
 ###Execute the program
 
@@ -38,7 +38,7 @@ Nettomon must be executed with superuser permission as it is using libpcap for t
 
 Pass the pid of the process to be monitored:
 
-    $ sudo ./nettomon <pid>
+    sudo ./build/nettomon <pid>
 
 ##Android
 
@@ -54,30 +54,30 @@ Add CrystaX NDK to the PATH variable in .bashrc.
 
 Clone the repository into nettomon/jni directory.
 
-    $ git clone https://github.com/zulhilmizainuddin/nettomon.git nettomon/jni
+    git clone https://github.com/zulhilmizainuddin/nettomon.git nettomon/jni
     
 ###Build
 
 Build the source code. The binaries will be under the libs directory.
 
-    $ ndk-build APP_ABI=armeabi-v7a
+    ndk-build APP_ABI=armeabi-v7a
     
 ###Deploy
 
 Deploy the binaries to the Android device under directory /data/local/tmp.
 
-    $ adb push libs/armeabi-v7a/libcrystax.so /data/local/tmp
-    $ adb push libs/armeabi-v7a/libgnustl_shared.so /data/local/tmp
-    $ adb push libs/armeabi-v7a/nettomon /data/local/tmp
+    adb push libs/armeabi-v7a/libcrystax.so /data/local/tmp
+    adb push libs/armeabi-v7a/libgnustl_shared.so /data/local/tmp
+    adb push libs/armeabi-v7a/nettomon /data/local/tmp
     
 ###Execute
 
 Make the binaries executable.
 
-    $ chmod 755 libcrystax.so libgnustl_shared.so nettomon
+    chmod 755 libcrystax.so libgnustl_shared.so nettomon
     
 Nettomon must be executed with superuser permission as it is using libpcap for the network monitoring. **Make sure the device is rooted.**
 
 Execute the program by passing it the pid of the process to be monitored.
 
-    $ su -c LD_LIBRARY_PATH=/data/local/tmp ./data/local/tmp/nettomon <pid>
+    su -c LD_LIBRARY_PATH=/data/local/tmp ./data/local/tmp/nettomon <pid>
