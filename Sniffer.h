@@ -9,6 +9,8 @@
 using namespace std;
 
 class Sniffer : ProcNetObserver {
+private:
+    static const unsigned int DEFAULT_SNAPLEN = 262144;
 public:
     Sniffer(ProcNetPublisher *procPublisher);
 
