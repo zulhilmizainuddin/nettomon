@@ -12,14 +12,13 @@ set(SOURCE_FILES
         NetData.h
         Sniffer.cpp Sniffer.h
         PacketProcessor.h
-        TcpProcessor.cpp TcpProcessor.h
         PacketPayload.h
-        UdpProcessor.cpp UdpProcessor.h
         ProcNetPublisher.cpp ProcNetPublisher.h
         ProcNetObserver.h
         ProcReadTimer.cpp ProcReadTimer.h
         NetworkSpeedTimer.cpp NetworkSpeedTimer.h
-        InputValidation.cpp InputValidation.h)
+        InputValidation.cpp InputValidation.h
+        EthernetProcessor.cpp EthernetProcessor.h)
 
 find_path(PCAP_ROOT_DIR NAMES include/pcap.h)
 find_path(PCAP_INCLUDE_DIR NAMES pcap.h HINTS ${PCAP_ROOT_DIR}/include)

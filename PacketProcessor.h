@@ -9,8 +9,7 @@ class PacketProcessor {
 public:
     virtual ~PacketProcessor() { }
 
-    virtual void process(const string& srcIp, const string& dstIp, const struct pcap_pkthdr *pkthdr, const u_char *packet,
-                             const vector<NetData>& netData) = 0;
+    virtual void process(const struct pcap_pkthdr *pkthdr, const u_char *packet, const vector<NetData> &netData) = 0;
 };
 
 #endif //NETTOMON_TRANSPORTPROCESSOR_H

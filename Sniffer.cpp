@@ -1,16 +1,15 @@
 #include <pcap.h>
-#include <arpa/inet.h>
-#include <netinet/ether.h>
-#include <netinet/ip.h>
 #include <mutex>
-#include "TcpProcessor.h"
-#include "UdpProcessor.h"
+#include "EthernetProcessor.h"
 #include "Sniffer.h"
+
 
 vector<NetData> tcpNetData;
 vector<NetData> udpNetData;
 
 mutex netDataMutex;
+
+int datalink = 0;
 
 Sniffer::Sniffer(ProcNetPublisher *procPublisher) {
     this->procPublisher = procPublisher;
@@ -28,40 +27,34 @@ void Sniffer::sniff() {
     }
 
     pcap_t* packetDescriptor =
-            pcap_open_live(deviceName.c_str(), DEFAULT_SNAPLEN, 0, 1000, errbuf);
+            pcap_open_live(deviceName.c_str(), DEFAULT_SNAPLEN, 0, 100, errbuf);
 
     if (packetDescriptor == NULL) {
         perror("Failed to listen to device");
         exit(1);
     }
 
+    datalink = pcap_datalink(packetDescriptor);
+
     pcap_loop(packetDescriptor, -1, [](u_char* args, const struct pcap_pkthdr* pkthdr, const u_char* packet) {
-        struct ip* ipHeader = (struct ip*)(packet + sizeof(struct ether_header));
 
-        string srcIp = inet_ntoa(ipHeader->ip_src);
-        string dstIp = inet_ntoa(ipHeader->ip_dst);
+        netDataMutex.lock();
 
-        switch (ipHeader->ip_p) {
-            case IPPROTO_TCP: {
-                netDataMutex.lock();
-                auto tcpNetDataTemp(tcpNetData);
-                netDataMutex.unlock();
+        vector<NetData> netDataList;
+        netDataList.reserve(tcpNetData.size() + udpNetData.size());
+        netDataList.insert(netDataList.end(), tcpNetData.begin(), tcpNetData.end());
+        netDataList.insert(netDataList.end(), udpNetData.begin(), udpNetData.end());
 
-                TcpProcessor().process(srcIp, dstIp, pkthdr, packet, tcpNetDataTemp);
-                break;
-            }
-            case IPPROTO_UDP: {
-                netDataMutex.lock();
-                auto udpNetDataTemp(udpNetData);
-                netDataMutex.unlock();
+        netDataMutex.unlock();
 
-                UdpProcessor().process(srcIp, dstIp, pkthdr, packet, udpNetDataTemp);
+        switch (datalink) {
+            case DLT_EN10MB: {
+                EthernetProcessor().process(pkthdr, packet, netDataList);
                 break;
             }
             default:
                 return;
         }
-
     }, NULL);
 }
 
