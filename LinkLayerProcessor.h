@@ -1,15 +1,15 @@
-#ifndef NETTOMON_TRANSPORTPROCESSOR_H
-#define NETTOMON_TRANSPORTPROCESSOR_H
+#ifndef NETTOMON_LINKLAYERPROCESSOR_H
+#define NETTOMON_LINKLAYERPROCESSOR_H
 
 #include <vector>
 #include <pcap.h>
 #include "NetData.h"
 
-class PacketProcessor {
+class LinkLayerProcessor {
 public:
-    virtual ~PacketProcessor() { }
+    virtual ~LinkLayerProcessor() { }
 
     virtual void process(const struct pcap_pkthdr *pkthdr, const u_char *packet, const vector<NetData> &netData) = 0;
 };
 
-#endif //NETTOMON_TRANSPORTPROCESSOR_H
+#endif //NETTOMON_LINKLAYERPROCESSOR_H

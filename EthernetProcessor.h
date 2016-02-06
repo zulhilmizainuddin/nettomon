@@ -2,9 +2,9 @@
 #define NETTOMON_ETHERNETPROCESSOR_H
 
 
-#include "PacketProcessor.h"
+#include "LinkLayerProcessor.h"
 
-class EthernetProcessor : PacketProcessor {
+class EthernetProcessor : LinkLayerProcessor {
 public:
     virtual void process(const struct pcap_pkthdr *pkthdr, const u_char *packet, const vector<NetData> &netData);
 };

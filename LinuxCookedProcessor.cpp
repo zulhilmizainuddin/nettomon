@@ -1,37 +1,22 @@
+#include <netinet/ether.h>
 #include <netinet/ip.h>
-#include <arpa/inet.h>
 #include "sll.h"
-#include "PacketPayload.h"
+#include "IPv4Processor.h"
 #include "LinuxCookedProcessor.h"
 
 
 void LinuxCookedProcessor::process(const struct pcap_pkthdr *pkthdr, const u_char *packet, const vector<NetData> &netData) {
 
-    struct ip* ipHeader = (struct ip*)(packet + SLL_HDR_LEN);
+    struct ip* ipHeader;
+    struct ether_header* etherHeader = (struct ether_header*)packet;
 
-    string srcIp = inet_ntoa(ipHeader->ip_src);
-    string dstIp = inet_ntoa(ipHeader->ip_dst);
-
-    for (auto data: netData) {
-        struct in_addr localAddr;
-        struct in_addr remoteAddr;
-
-        localAddr.s_addr = (uint32_t)stoul(data.localIp, NULL, 16);
-        remoteAddr.s_addr = (uint32_t)stoul(data.remoteIp, NULL, 16);
-
-        string localIp = inet_ntoa(localAddr);
-        string remoteIp = inet_ntoa(remoteAddr);
-
-        if (srcIp == localIp && dstIp == remoteIp) {
-            PacketPayload::getInstance().addUploadedBytes(ntohs(ipHeader->ip_len));
-            /*PacketPayload::getInstance().addUploadedBytes(pkthdr->caplen);*/
+    int etherType = ntohs(etherHeader->ether_type);
+    switch (etherType) {
+        case ETHERTYPE_IP:
+            ipHeader = (struct ip*)(packet + SLL_HDR_LEN);
+            IPv4Processor().process(ipHeader, pkthdr, netData);
             break;
-        }
-
-        if (srcIp == remoteIp && dstIp == localIp) {
-            PacketPayload::getInstance().addDownloadedBytes(ntohs(ipHeader->ip_len));
-            /*PacketPayload::getInstance().addDownloadedBytes(pkthdr->caplen);*/
+        default:
             break;
-        }
     }
 }

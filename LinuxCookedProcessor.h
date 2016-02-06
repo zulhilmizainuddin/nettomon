@@ -2,9 +2,9 @@
 #define NETTOMON_LINUXCOOKEDPROCESSOR_H
 
 
-#include "PacketProcessor.h"
+#include "LinkLayerProcessor.h"
 
-class LinuxCookedProcessor : PacketProcessor {
+class LinuxCookedProcessor : LinkLayerProcessor {
 public:
     virtual void process(const struct pcap_pkthdr *pkthdr, const u_char *packet, const vector<NetData> &netData);
 };

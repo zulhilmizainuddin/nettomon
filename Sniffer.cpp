@@ -1,8 +1,7 @@
 #include <pcap.h>
 #include <mutex>
-#include "EthernetProcessor.h"
+#include "LinkLayerController.h"
 #include "Sniffer.h"
-#include "LinuxCookedProcessor.h"
 
 
 vector<NetData> tcpNetData;
@@ -48,15 +47,8 @@ void Sniffer::sniff() {
 
         netDataMutex.unlock();
 
-        switch (datalink) {
-            case DLT_EN10MB:
-                EthernetProcessor().process(pkthdr, packet, netDataList);
-                break;
-            case DLT_LINUX_SLL:
-                LinuxCookedProcessor().process(pkthdr, packet, netDataList);
-            default:
-                return;
-        }
+        LinkLayerController(datalink).route(pkthdr, packet, netDataList);
+
     }, NULL);
 }
 

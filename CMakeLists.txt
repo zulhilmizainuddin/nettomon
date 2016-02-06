@@ -11,7 +11,7 @@ set(SOURCE_FILES
         InodeIpHelper.cpp InodeIpHelper.h
         NetData.h
         Sniffer.cpp Sniffer.h
-        PacketProcessor.h
+        LinkLayerProcessor.h
         PacketPayload.h
         ProcNetPublisher.cpp ProcNetPublisher.h
         ProcNetObserver.h
@@ -20,7 +20,11 @@ set(SOURCE_FILES
         InputValidation.cpp InputValidation.h
         EthernetProcessor.cpp EthernetProcessor.h
         sll.h
-        LinuxCookedProcessor.cpp LinuxCookedProcessor.h)
+        LinuxCookedProcessor.cpp LinuxCookedProcessor.h
+        IPv4Processor.cpp IPv4Processor.h
+        LinkLayerController.cpp
+        LinkLayerController.h
+        InternetLayerProcessor.h)
 
 find_path(PCAP_ROOT_DIR NAMES include/pcap.h)
 find_path(PCAP_INCLUDE_DIR NAMES pcap.h HINTS ${PCAP_ROOT_DIR}/include)
