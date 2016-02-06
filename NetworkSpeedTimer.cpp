@@ -35,8 +35,8 @@ void displayNetworkSpeed(const system::error_code &code, asio::deadline_timer *t
             printSpeed = printSpeed + "\n" : printSpeed = "\r" + printSpeed;
 
     printf(printSpeed.c_str(),
-           PacketPayload::getInstance().getUploadedBytes() / 1000.0,
-           PacketPayload::getInstance().getDownloadedBytes() / 1000.0);
+           PacketPayload::getInstance().getUploadedBytes() / 1024.0,
+           PacketPayload::getInstance().getDownloadedBytes() / 1024.0);
     fflush(stdout);
 
     PacketPayload::getInstance().resetUploadedBytes();
