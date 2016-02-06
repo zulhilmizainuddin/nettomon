@@ -8,9 +8,9 @@
 void LinuxCookedProcessor::process(const struct pcap_pkthdr *pkthdr, const u_char *packet, const vector<NetData> &netData) {
 
     struct ip* ipHeader;
-    struct ether_header* etherHeader = (struct ether_header*)packet;
+    struct sll_header* linuxCookedHeader = (struct sll_header*)packet;
 
-    int etherType = ntohs(etherHeader->ether_type);
+    int etherType = ntohs(linuxCookedHeader->sll_protocol);
     switch (etherType) {
         case ETHERTYPE_IP:
             ipHeader = (struct ip*)(packet + SLL_HDR_LEN);
