@@ -18,7 +18,9 @@ set(SOURCE_FILES
         ProcReadTimer.cpp ProcReadTimer.h
         NetworkSpeedTimer.cpp NetworkSpeedTimer.h
         InputValidation.cpp InputValidation.h
-        EthernetProcessor.cpp EthernetProcessor.h)
+        EthernetProcessor.cpp EthernetProcessor.h
+        sll.h
+        LinuxCookedProcessor.cpp LinuxCookedProcessor.h)
 
 find_path(PCAP_ROOT_DIR NAMES include/pcap.h)
 find_path(PCAP_INCLUDE_DIR NAMES pcap.h HINTS ${PCAP_ROOT_DIR}/include)

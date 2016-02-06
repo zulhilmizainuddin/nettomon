@@ -1,12 +1,13 @@
-#include <netinet/ether.h>
 #include <netinet/ip.h>
 #include <arpa/inet.h>
+#include "sll.h"
 #include "PacketPayload.h"
-#include "EthernetProcessor.h"
+#include "LinuxCookedProcessor.h"
 
-void EthernetProcessor::process(const struct pcap_pkthdr *pkthdr, const u_char *packet, const vector<NetData> &netData) {
 
-    struct ip* ipHeader = (struct ip*)(packet + sizeof(struct ether_header));
+void LinuxCookedProcessor::process(const struct pcap_pkthdr *pkthdr, const u_char *packet, const vector<NetData> &netData) {
+
+    struct ip* ipHeader = (struct ip*)(packet + SLL_HDR_LEN);
 
     string srcIp = inet_ntoa(ipHeader->ip_src);
     string dstIp = inet_ntoa(ipHeader->ip_dst);
