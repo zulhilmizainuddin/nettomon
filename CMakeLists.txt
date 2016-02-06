@@ -5,26 +5,25 @@ set(CMAKE_CXX_COMPILER g++-4.9)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -lpcap -pthread -fopenmp -O3")
 
 set(SOURCE_FILES
+        EthernetProcessor.cpp EthernetProcessor.h
+        InodeIpHelper.cpp InodeIpHelper.h
+        InputValidation.cpp InputValidation.h
+        InternetLayerProcessor.h
+        IPv4Processor.cpp IPv4Processor.h
+        LinkLayerController.cpp LinkLayerController.h
+        LinkLayerProcessor.h
+        LinuxCookedProcessor.cpp LinuxCookedProcessor.h
         main.cpp
+        NetData.h
+        NetworkSpeedTimer.cpp NetworkSpeedTimer.h
+        PacketPayload.h
         ProcFd.cpp ProcFd.h
         ProcNet.cpp ProcNet.h
-        InodeIpHelper.cpp InodeIpHelper.h
-        NetData.h
-        Sniffer.cpp Sniffer.h
-        LinkLayerProcessor.h
-        PacketPayload.h
-        ProcNetPublisher.cpp ProcNetPublisher.h
         ProcNetObserver.h
+        ProcNetPublisher.cpp ProcNetPublisher.h
         ProcReadTimer.cpp ProcReadTimer.h
-        NetworkSpeedTimer.cpp NetworkSpeedTimer.h
-        InputValidation.cpp InputValidation.h
-        EthernetProcessor.cpp EthernetProcessor.h
         sll.h
-        LinuxCookedProcessor.cpp LinuxCookedProcessor.h
-        IPv4Processor.cpp IPv4Processor.h
-        LinkLayerController.cpp
-        LinkLayerController.h
-        InternetLayerProcessor.h)
+        Sniffer.cpp Sniffer.h)
 
 find_path(PCAP_ROOT_DIR NAMES include/pcap.h)
 find_path(PCAP_INCLUDE_DIR NAMES pcap.h HINTS ${PCAP_ROOT_DIR}/include)
