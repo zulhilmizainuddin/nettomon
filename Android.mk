@@ -5,17 +5,19 @@ NDK_TOOLCHAIN_VERSION := 4.9
 
 LOCAL_MODULE    := nettomon
 LOCAL_SRC_FILES :=\
+        EthernetProcessor.cpp\
+        InodeIpHelper.cpp\
+        InputValidation.cpp\
+        IPv4Processor.cpp\
+        LinkLayerController.cpp\
+        LinuxCookedProcessor.cpp\
         main.cpp\
+        NetworkSpeedTimer.cpp\
         ProcFd.cpp\
         ProcNet.cpp\
-        InodeIpHelper.cpp\
-        Sniffer.cpp\
-        TcpProcessor.cpp\
-        UdpProcessor.cpp\
         ProcNetPublisher.cpp\
         ProcReadTimer.cpp\
-        NetworkSpeedTimer.cpp\
-        InputValidation.cpp
+        Sniffer.cpp
 
 LOCAL_CFLAGS += -fopenmp -O3
 LOCAL_LDFLAGS += -fopenmp
