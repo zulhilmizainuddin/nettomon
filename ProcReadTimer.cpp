@@ -7,6 +7,7 @@
 #include "ProcNet.h"
 #include "InodeIpHelper.h"
 #include "ProcNetPublisher.h"
+#include "Duration.h"
 #include "ProcReadTimer.h"
 
 
@@ -26,7 +27,7 @@ void ProcReadTimer::start(const char *pid) {
     thread procReadThread([](const char* processId) {
         asio::io_service io;
 
-        asio::deadline_timer timer(io, posix_time::milliseconds(0));
+        asio::deadline_timer timer(io, posix_time::microseconds(0));
         timer.async_wait(bind(procRead, asio::placeholders::error, &timer, processId));
 
         io.run();
@@ -36,6 +37,9 @@ void ProcReadTimer::start(const char *pid) {
 }
 
 void procRead(const system::error_code &code, asio::deadline_timer *timer, const string& pid) {
+
+    Duration duration;
+    duration.start();
 
     vector<string> socketsInode;
     unordered_map<string, NetData> tcpInodeIp;
@@ -68,6 +72,8 @@ void procRead(const system::error_code &code, asio::deadline_timer *timer, const
     procNetPublisher->setNetData(tcpNetData, udpNetData);
     procNetPublisher->notifyObservers();
 
-    timer->expires_at(timer->expires_at() + posix_time::milliseconds(500));
+    duration.end();
+
+    timer->expires_at(timer->expires_at() + posix_time::microseconds(500000 - duration.inMicroSeconds()));
     timer->async_wait(bind(procRead, asio::placeholders::error, timer, pid));
 }

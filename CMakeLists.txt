@@ -5,6 +5,7 @@ set(CMAKE_CXX_COMPILER g++-4.9)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -lpcap -pthread -fopenmp -O3")
 
 set(SOURCE_FILES
+        Duration.cpp Duration.h
         EthernetProcessor.cpp EthernetProcessor.h
         InodeIpHelper.cpp InodeIpHelper.h
         InputValidation.cpp InputValidation.h

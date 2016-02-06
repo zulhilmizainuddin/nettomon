@@ -5,6 +5,7 @@ NDK_TOOLCHAIN_VERSION := 4.9
 
 LOCAL_MODULE    := nettomon
 LOCAL_SRC_FILES :=\
+        Duration.cpp\
         EthernetProcessor.cpp\
         InodeIpHelper.cpp\
         InputValidation.cpp\

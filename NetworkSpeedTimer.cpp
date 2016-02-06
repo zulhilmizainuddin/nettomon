@@ -3,6 +3,7 @@
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include "PacketPayload.h"
+#include "Duration.h"
 #include "NetworkSpeedTimer.h"
 
 using namespace std;
@@ -18,7 +19,7 @@ void NetworkSpeedTimer::start() {
     thread networkSpeedThread([]() {
         asio::io_service io;
 
-        asio::deadline_timer timer(io, posix_time::milliseconds(1000));
+        asio::deadline_timer timer(io, posix_time::microseconds(1000000));
         timer.async_wait(bind(displayNetworkSpeed, asio::placeholders::error, &timer));
 
         io.run();
@@ -28,6 +29,9 @@ void NetworkSpeedTimer::start() {
 }
 
 void displayNetworkSpeed(const system::error_code &code, asio::deadline_timer *timer) {
+
+    Duration duration;
+    duration.start();
 
     string printSpeed("Upload: %7.1lf KB     Download: %7.1lf KB");
 
@@ -48,6 +52,8 @@ void displayNetworkSpeed(const system::error_code &code, asio::deadline_timer *t
         }
     }
 
-    timer->expires_at(timer->expires_at() + posix_time::milliseconds(1000));
+    duration.end();
+
+    timer->expires_at(timer->expires_at() + posix_time::microseconds(1000000 - duration.inMicroSeconds()));
     timer->async_wait(bind(displayNetworkSpeed, asio::placeholders::error, timer));
 }
