@@ -5,6 +5,11 @@ if [[ $# -ne 1 ]]; then
     exit 1
 fi
 
+if [[ -x /usr/bin/gcc-5 ]] && [[ -x /usr/bin/g++-5 ]]; then
+    export CC=/usr/bin/gcc-5
+    export CXX=/usr/bin/g++-5
+fi
+
 if [[ ! -d build ]]; then
     mkdir -v build
 fi
