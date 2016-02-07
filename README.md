@@ -12,7 +12,6 @@ Install the dependencies:
 
     sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
     sudo apt-get -y update
-    sudo apt-get -y install build-essential
     sudo apt-get -y install cmake
     sudo apt-get -y install g++-5
     sudo apt-get -y install libboost-all-dev
@@ -74,10 +73,10 @@ Deploy the binaries to the Android device under directory /data/local/tmp.
 
 Make the binaries executable.
 
-    chmod 755 libcrystax.so libgnustl_shared.so nettomon
+    adb shell chmod 755 libcrystax.so libgnustl_shared.so nettomon
     
 Nettomon must be executed with superuser permission as it is using libpcap for the network monitoring. **Make sure the device is rooted.**
 
 Execute the program by passing it the pid of the process to be monitored.
 
-    su -c LD_LIBRARY_PATH=/data/local/tmp ./data/local/tmp/nettomon <pid>
+    adb shell su -c LD_LIBRARY_PATH=/data/local/tmp ./data/local/tmp/nettomon <pid>
