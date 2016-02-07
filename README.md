@@ -14,7 +14,7 @@ Install the dependencies:
     sudo apt-get -y update
     sudo apt-get -y install build-essential
     sudo apt-get -y install cmake
-    sudo apt-get -y install g++-4.9
+    sudo apt-get -y install g++-5
     sudo apt-get -y install libboost-all-dev
     sudo apt-get -y install libpcap-dev
     

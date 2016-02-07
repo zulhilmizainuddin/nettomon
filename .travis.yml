@@ -8,7 +8,7 @@ dist: trusty
 before_install:
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   - sudo apt-get -y update
-  - sudo apt-get -y install g++-4.9
+  - sudo apt-get -y install g++-5
   - sudo apt-get -y install libboost-all-dev
   - sudo apt-get -y install libpcap-dev
 
