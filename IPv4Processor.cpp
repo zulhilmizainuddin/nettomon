@@ -15,14 +15,17 @@ void IPv4Processor::process(void *header, const struct pcap_pkthdr *pkthdr, cons
     string dstIp = inet_ntop(AF_INET, &ipHeader->ip_dst, dstIpBuffer, INET_ADDRSTRLEN);
 
     for (auto data: netData) {
-        auto localIpBase10 = (uint32_t)stoul(data.localIp, NULL, 16);
-        auto remoteIpBase10 = (uint32_t)stoul(data.remoteIp, NULL, 16);
+        struct in_addr localIpAddr;
+        struct in_addr remoteIpAddr;
+
+        localIpAddr.s_addr = (uint32_t)stoul(data.localIp, NULL, 16);
+        remoteIpAddr.s_addr = (uint32_t)stoul(data.remoteIp, NULL, 16);
 
         char localIpBuffer[INET_ADDRSTRLEN];
         char remoteIpBuffer[INET_ADDRSTRLEN];
 
-        string localIp = inet_ntop(AF_INET, &localIpBase10, localIpBuffer, INET_ADDRSTRLEN);
-        string remoteIp = inet_ntop(AF_INET, &remoteIpBase10, remoteIpBuffer, INET_ADDRSTRLEN);
+        string localIp = inet_ntop(AF_INET, &localIpAddr, localIpBuffer, INET_ADDRSTRLEN);
+        string remoteIp = inet_ntop(AF_INET, &remoteIpAddr, remoteIpBuffer, INET_ADDRSTRLEN);
 
         if (srcIp == localIp && dstIp == remoteIp) {
             PacketPayload::getInstance().addUploadedBytes(pkthdr->caplen);
