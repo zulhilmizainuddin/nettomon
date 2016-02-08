@@ -10,7 +10,7 @@ class InternetLayerProcessor {
 public:
     virtual ~InternetLayerProcessor() { }
 
-    virtual void process(struct ip *ipHeader, const struct pcap_pkthdr *pkthdr, const vector<NetData> &netData) = 0;
+    virtual void process(void *header, const struct pcap_pkthdr *pkthdr, const vector<NetData> &netData) = 0;
 };
 
 #endif //NETTOMON_INTERNETLAYERPROCESSOR_H

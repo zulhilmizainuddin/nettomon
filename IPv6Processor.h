@@ -1,13 +1,13 @@
-#ifndef NETTOMON_IPV4PROCESSOR_H
-#define NETTOMON_IPV4PROCESSOR_H
+#ifndef NETTOMON_IPV6PROCESSOR_H
+#define NETTOMON_IPV6PROCESSOR_H
 
 
 #include "InternetLayerProcessor.h"
 
-class IPv4Processor : InternetLayerProcessor {
+class IPv6Processor : InternetLayerProcessor {
 public:
     virtual void process(void *header, const struct pcap_pkthdr *pkthdr, const vector<NetData> &netData);
 };
 
 
-#endif //NETTOMON_IPV4PROCESSOR_H
+#endif //NETTOMON_IPV6PROCESSOR_H

@@ -6,7 +6,8 @@
 
 class EthernetProcessor : LinkLayerProcessor {
 public:
-    virtual void process(const struct pcap_pkthdr *pkthdr, const u_char *packet, const vector<NetData> &netData);
+    virtual void process(const struct pcap_pkthdr *pkthdr, const u_char *packet, const vector<NetData> &ipNetData,
+                             const vector<NetData> &ip6NetData);
 };
 
 

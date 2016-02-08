@@ -4,8 +4,8 @@
 #include "Sniffer.h"
 
 
-vector<NetData> tcpNetData;
-vector<NetData> udpNetData;
+vector<NetData> ipNetData;
+vector<NetData> ip6NetData;
 
 mutex netDataMutex;
 
@@ -40,22 +40,20 @@ void Sniffer::sniff() {
 
         netDataMutex.lock();
 
-        vector<NetData> netDataList;
-        netDataList.reserve(tcpNetData.size() + udpNetData.size());
-        netDataList.insert(netDataList.end(), tcpNetData.begin(), tcpNetData.end());
-        netDataList.insert(netDataList.end(), udpNetData.begin(), udpNetData.end());
+        vector<NetData> ipNetDataTemp(ipNetData);
+        vector<NetData> ip6NetDataTemp(ip6NetData);
 
         netDataMutex.unlock();
 
-        LinkLayerController(datalink).route(pkthdr, packet, netDataList);
+        LinkLayerController(datalink).route(pkthdr, packet, ipNetDataTemp, ip6NetDataTemp);
 
     }, NULL);
 }
 
 
-void Sniffer::updateNetData(const vector<NetData>& tcpNetData, const vector<NetData>& udpNetData) {
+void Sniffer::updateNetData(const vector<NetData> &ipNetData, const vector<NetData> &ip6NetData) {
     netDataMutex.lock();
-    ::tcpNetData = tcpNetData;
-    ::udpNetData = udpNetData;
+    ::ipNetData = ipNetData;
+    ::ip6NetData = ip6NetData;
     netDataMutex.unlock();
 }

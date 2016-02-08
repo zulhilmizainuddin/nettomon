@@ -10,6 +10,7 @@ LOCAL_SRC_FILES :=\
         InodeIpHelper.cpp\
         InputValidation.cpp\
         IPv4Processor.cpp\
+        IPv6Processor.cpp\
         LinkLayerController.cpp\
         LinuxCookedProcessor.cpp\
         main.cpp\

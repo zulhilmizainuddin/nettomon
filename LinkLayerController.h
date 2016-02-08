@@ -11,7 +11,8 @@ private:
 public:
     LinkLayerController(int datalink) : datalink(datalink) { }
 
-    void route(const struct pcap_pkthdr *pkthdr, const u_char *packet, const vector<NetData> &netData);
+    void route(const struct pcap_pkthdr *pkthdr, const u_char *packet, const vector<NetData> &ipNetData,
+                   const vector<NetData> &ip6NetData);
 };
 
 

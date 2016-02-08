@@ -12,6 +12,7 @@ set(SOURCE_FILES
         InputValidation.cpp InputValidation.h
         InternetLayerProcessor.h
         IPv4Processor.cpp IPv4Processor.h
+        IPv6Processor.cpp IPv6Processor.h
         LinkLayerController.cpp LinkLayerController.h
         LinkLayerProcessor.h
         LinuxCookedProcessor.cpp LinuxCookedProcessor.h

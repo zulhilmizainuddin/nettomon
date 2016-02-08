@@ -44,6 +44,8 @@ void procRead(const system::error_code &code, asio::deadline_timer *timer, const
     vector<string> socketsInode;
     unordered_map<string, NetData> tcpInodeIp;
     unordered_map<string, NetData> udpInodeIp;
+    unordered_map<string, NetData> tcp6InodeIp;
+    unordered_map<string, NetData> udp6InodeIp;
 
     #pragma omp parallel sections
     {
@@ -55,10 +57,18 @@ void procRead(const system::error_code &code, asio::deadline_timer *timer, const
 
         #pragma omp section
         udpInodeIp = ProcNet("udp").getInodesIpMap();
+
+        #pragma omp section
+        tcp6InodeIp = ProcNet("tcp6").getInodesIpMap();
+
+        #pragma omp section
+        udp6InodeIp = ProcNet("udp6").getInodesIpMap();
     }
 
     vector<NetData> tcpNetData;
     vector<NetData> udpNetData;
+    vector<NetData> tcp6NetData;
+    vector<NetData> udp6NetData;
 
     #pragma omp parallel sections
     {
@@ -67,9 +77,35 @@ void procRead(const system::error_code &code, asio::deadline_timer *timer, const
 
         #pragma omp section
         udpNetData = InodeIpHelper::filterProccessIp(socketsInode, udpInodeIp);
+
+        #pragma omp section
+        tcp6NetData = InodeIpHelper::filterProccessIp(socketsInode, tcp6InodeIp);
+
+        #pragma omp section
+        udp6NetData = InodeIpHelper::filterProccessIp(socketsInode, udp6InodeIp);
     }
 
-    procNetPublisher->setNetData(tcpNetData, udpNetData);
+    vector<NetData> ipNetData;
+    vector<NetData> ip6NetData;
+
+    #pragma omp parallel sections
+    {
+        #pragma omp section
+        {
+            ipNetData.reserve(tcpNetData.size() + udpNetData.size());
+            ipNetData.insert(ipNetData.end(), tcpNetData.begin(), tcpNetData.end());
+            ipNetData.insert(ipNetData.end(), udpNetData.begin(), udpNetData.end());
+        }
+
+        #pragma omp section
+        {
+            ip6NetData.reserve(tcp6NetData.size() + udp6NetData.size());
+            ip6NetData.insert(ip6NetData.end(), tcp6NetData.begin(), tcp6NetData.end());
+            ip6NetData.insert(ip6NetData.end(), udp6NetData.begin(), udp6NetData.end());
+        }
+    }
+
+    procNetPublisher->setNetData(ipNetData, ip6NetData);
     procNetPublisher->notifyObservers();
 
     duration.end();

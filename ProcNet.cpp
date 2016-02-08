@@ -31,7 +31,7 @@ unordered_map<string, NetData> ProcNet::retrieveInodeIpMapping() {
 }
 
 pair<string, NetData> ProcNet::extractInodeIpMapping(const string &ipTypeData) {
-    regex ipTypeDataRegex("\\d++:\\s([0-9A-Z]{8}):([0-9A-Z]{4})\\s([0-9A-Z]{8}):([0-9A-Z]{4})(?:\\s++[0-9A-Z:]++){6}\\s([0-9]++)");
+    regex ipTypeDataRegex("\\d++:\\s([0-9A-Z]{8,32}+):([0-9A-Z]{4})\\s([0-9A-Z]{8,32}+):([0-9A-Z]{4})(?:\\s++[0-9A-Z:]++){6}\\s([0-9]++)");
     smatch match;
 
     struct NetData netData;
