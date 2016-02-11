@@ -22,9 +22,9 @@ ProcReadTimer::ProcReadTimer() {
     procNetPublisher = this;
 }
 
-void ProcReadTimer::start(const char *pid) {
+void ProcReadTimer::start(string pid) {
 
-    thread procReadThread([](const char* processId) {
+    thread procReadThread([](string processId) {
         asio::io_service io;
 
         asio::deadline_timer timer(io, posix_time::microseconds(0));

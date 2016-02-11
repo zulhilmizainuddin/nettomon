@@ -1,6 +1,7 @@
+#include <regex>
+#include "ProcessId.h"
 #include "InputValidation.h"
 
-#include <regex>
 
 bool printListFormat = false;
 int runDuration = -1;
@@ -21,10 +22,17 @@ void InputValidation::ValidateHelp(string option) {
     }
 }
 
-void InputValidation::ValidatePID(string pid) {
+void InputValidation::ValidatePID(string &pid) {
     if (!regex_match(pid, regex("^[0-9]{1,5}+$"))) {
-        perror("pid must be an integer");
-        exit(1);
+        string processId = ProcessId().getProcessId(pid);
+
+        if (processId.empty()) {
+            perror("Entered pid/process does not exist");
+            exit(1);
+        }
+        else {
+            pid = processId;
+        }
     }
 }
 

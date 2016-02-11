@@ -9,7 +9,7 @@ class InputValidation {
 public:
     void ValidateNumberOfArguments(int argc);
     void ValidateHelp(string option);
-    void ValidatePID(string pid);
+    void ValidatePID(string &pid);
     void ValidateOptions(int argc, char *options[]);
 };
 

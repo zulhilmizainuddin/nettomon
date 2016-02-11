@@ -21,8 +21,9 @@ LOCAL_SRC_FILES :=\
         ProcReadTimer.cpp\
         Sniffer.cpp
 
-LOCAL_CFLAGS += -fopenmp -O3
-LOCAL_LDFLAGS += -fopenmp
+LOCAL_CFLAGS += -O3
+#LOCAL_CFLAGS += -fopenmp
+#LOCAL_LDFLAGS += -fopenmp
 LOCAL_C_INCLUDES := $(LOCAL_PATH) $(LOCAL_PATH)/libpcap
 LOCAL_STATIC_LIBRARIES := libpcap boost_system_static
 
