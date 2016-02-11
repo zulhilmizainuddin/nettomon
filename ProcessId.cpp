@@ -36,5 +36,7 @@ string ProcessId::retrieveProcessId(const string &processName) {
         }
     }
 
+    closedir(procDirectory);
+
     return processId;
 }
