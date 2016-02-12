@@ -4,7 +4,7 @@
 #include "IPv4Processor.h"
 
 
-void IPv4Processor::process(void *header, const struct pcap_pkthdr *pkthdr, const vector<NetData> &netData) {
+void IPv4Processor::process(const u_char *header, const struct pcap_pkthdr *pkthdr, const vector<NetData> &netData) {
 
     struct ip* ipHeader = (struct ip*)header;
 

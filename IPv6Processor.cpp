@@ -5,7 +5,7 @@
 #include "IPv6Processor.h"
 
 
-void IPv6Processor::process(void *header, const struct pcap_pkthdr *pkthdr, const vector<NetData> &netData) {
+void IPv6Processor::process(const u_char *header, const struct pcap_pkthdr *pkthdr, const vector<NetData> &netData) {
 
     struct ip6_hdr* ip6Header = (struct ip6_hdr*)header;
 

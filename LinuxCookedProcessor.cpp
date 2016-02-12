@@ -1,6 +1,4 @@
 #include <netinet/ether.h>
-#include <netinet/ip.h>
-#include <netinet/ip6.h>
 #include "sll.h"
 #include "IPv4Processor.h"
 #include "IPv6Processor.h"
@@ -11,19 +9,16 @@ void LinuxCookedProcessor::process(const struct pcap_pkthdr *pkthdr, const u_cha
                                    const vector<NetData> &ip6NetData) {
 
     struct sll_header* linuxCookedHeader = (struct sll_header*)packet;
+    const u_char* ipHeader = packet + sizeof(sll_header);
 
     auto etherType = ntohs((uint16_t)linuxCookedHeader->sll_protocol);
     switch (etherType) {
-        case ETHERTYPE_IP: {
-            void* ipHeader = (struct ip*)(packet + sizeof(sll_header));
+        case ETHERTYPE_IP:
             IPv4Processor().process(ipHeader, pkthdr, ipNetData);
             break;
-        }
-        case ETHERTYPE_IPV6: {
-            void* ip6Header = (struct ip6_hdr*)(packet + sizeof(sll_header));
-            IPv6Processor().process(ip6Header, pkthdr, ip6NetData);
+        case ETHERTYPE_IPV6:
+            IPv6Processor().process(ipHeader, pkthdr, ip6NetData);
             break;
-        }
         default:
             break;
     }
