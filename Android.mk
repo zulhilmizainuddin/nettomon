@@ -15,6 +15,7 @@ LOCAL_SRC_FILES :=\
         LinuxCookedProcessor.cpp\
         main.cpp\
         NetworkSpeedTimer.cpp\
+        ProcessId.cpp\
         ProcFd.cpp\
         ProcNet.cpp\
         ProcNetPublisher.cpp\
