@@ -4,7 +4,7 @@
 
 #include "InternetLayerProcessor.h"
 
-class IPv6Processor : InternetLayerProcessor {
+class IPv6Processor : public InternetLayerProcessor {
 public:
     virtual void process(const u_char *header, const struct pcap_pkthdr *pkthdr, const vector<NetData> &netData);
 };

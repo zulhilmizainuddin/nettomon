@@ -9,9 +9,11 @@ LOCAL_SRC_FILES :=\
         EthernetProcessor.cpp\
         InodeIpHelper.cpp\
         InputValidation.cpp\
+        InternetLayerProcessorFactory.cpp\
         IPv4Processor.cpp\
         IPv6Processor.cpp\
         LinkLayerController.cpp\
+        LinkLayerProcessorFactory.cpp\
         LinuxCookedProcessor.cpp\
         main.cpp\
         NetworkSpeedTimer.cpp\

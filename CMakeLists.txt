@@ -11,10 +11,12 @@ set(SOURCE_FILES
         InodeIpHelper.cpp InodeIpHelper.h
         InputValidation.cpp InputValidation.h
         InternetLayerProcessor.h
+        InternetLayerProcessorFactory.cpp InternetLayerProcessorFactory.h
         IPv4Processor.cpp IPv4Processor.h
         IPv6Processor.cpp IPv6Processor.h
         LinkLayerController.cpp LinkLayerController.h
         LinkLayerProcessor.h
+        LinkLayerProcessorFactory.cpp LinkLayerProcessorFactory.h
         LinuxCookedProcessor.cpp LinuxCookedProcessor.h
         main.cpp
         NetData.h
