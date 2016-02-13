@@ -1,6 +1,6 @@
 # nettomon [![Build Status](https://travis-ci.org/zulhilmizainuddin/nettomon.svg?branch=master)](https://travis-ci.org/zulhilmizainuddin/nettomon)
 C++ program for monitoring Linux and Android process network upload and download speed using libpcap.
-Currently supports IPv4.
+Supports IPv4 and IPv6.
 
 <img src="https://github.com/zulhilmizainuddin/nettomon/blob/master/nettomon.gif">
 
@@ -8,7 +8,7 @@ Currently supports IPv4.
 
 ###Environment setup
 
-Install the dependencies:
+Install the dependencies.
 
     sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
     sudo apt-get -y update
@@ -27,7 +27,7 @@ Clone the repository.
 
 ###Build
 
-Run build.sh. The nettomon binary will be located under the build directory:
+Run build.sh. The nettomon binary will be located under the build directory.
 
     ./build.sh <number of build workers>
     
@@ -35,9 +35,9 @@ Run build.sh. The nettomon binary will be located under the build directory:
 
 Nettomon must be executed with superuser permission as it is using libpcap for the network monitoring.
 
-Pass the pid of the process to be monitored:
+Pass the pid of the process to be monitored.
 
-    sudo ./build/nettomon <pid>
+    sudo ./build/nettomon <pid or process name>
 
 ##Android
 
@@ -73,10 +73,21 @@ Deploy the binaries to the Android device under directory /data/local/tmp.
 
 Make the binaries executable.
 
-    adb shell chmod 755 libcrystax.so libgnustl_shared.so nettomon
+    adb shell chmod 755 /data/local/tmp/libcrystax.so /data/local/tmp/libgnustl_shared.so /data/local/tmp/nettomon
     
 Nettomon must be executed with superuser permission as it is using libpcap for the network monitoring. **Make sure the device is rooted.**
 
 Execute the program by passing it the pid of the process to be monitored.
 
-    adb shell su -c LD_LIBRARY_PATH=/data/local/tmp ./data/local/tmp/nettomon <pid>
+    adb shell su -c LD_LIBRARY_PATH=/data/local/tmp ./data/local/tmp/nettomon <pid or process name>
+
+##Help
+
+View help by executing:
+
+    nettomon -h
+
+    Usage: nettomon <pid | process name> [OPTIONS...]
+    
+      -l            list result line by line
+      -d n          execute program for n number of seconds
