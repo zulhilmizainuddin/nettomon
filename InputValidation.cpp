@@ -8,14 +8,14 @@ int runDuration = -1;
 
 void InputValidation::ValidateNumberOfArguments(int argc) {
     if (argc < 2) {
-        perror("Usage: nettomon pid [OPTIONS...]");
+        perror("Usage: nettomon <pid | process name> [OPTIONS...]");
         exit(1);
     }
 }
 
 void InputValidation::ValidateHelp(string option) {
     if (string(option) == "-h") {
-        printf("Usage: nettomon pid [OPTIONS...]\n\n");
+        printf("Usage: nettomon <pid | process name> [OPTIONS...]\n\n");
         printf("  -l\t\t\tlist result line by line\n");
         printf("  -d n\t\t\texecute program for n number of seconds\n");
         exit(0);
