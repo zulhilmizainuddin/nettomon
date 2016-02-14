@@ -3,19 +3,13 @@
 #include "LinkLayerProcessorFactory.h"
 
 
-LinkLayerProcessor * LinkLayerProcessorFactory::getProcessor(int type) {
-    LinkLayerProcessor*processor = NULL;
-
+unique_ptr<LinkLayerProcessor> LinkLayerProcessorFactory::getProcessor(int type) {
     switch (type) {
         case DLT_EN10MB:
-            processor = new EthernetProcessor;
-            break;
+            return unique_ptr<LinkLayerProcessor>(new EthernetProcessor);
         case DLT_LINUX_SLL:
-            processor = new LinuxCookedProcessor;
-            break;
+            return unique_ptr<LinkLayerProcessor>(new LinuxCookedProcessor);
         default:
-            break;
+            return nullptr;
     }
-
-    return processor;
 }

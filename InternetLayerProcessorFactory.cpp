@@ -4,19 +4,13 @@
 #include "InternetLayerProcessorFactory.h"
 
 
-InternetLayerProcessor *InternetLayerProcessorFactory::getProcessor(int type) {
-    InternetLayerProcessor* processor = NULL;
-
+unique_ptr<InternetLayerProcessor> InternetLayerProcessorFactory::getProcessor(int type) {
     switch (type) {
         case ETHERTYPE_IP:
-            processor = new IPv4Processor;
-            break;
+            return unique_ptr<InternetLayerProcessor>(new IPv4Processor);
         case ETHERTYPE_IPV6:
-            processor = new IPv6Processor;
-            break;
+            return unique_ptr<InternetLayerProcessor>(new IPv6Processor);
         default:
-            break;
+            return nullptr;
     }
-
-    return processor;
 }

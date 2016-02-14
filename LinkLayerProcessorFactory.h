@@ -2,11 +2,12 @@
 #define NETTOMON_LINKLAYERPROCESSORFACTORY_H
 
 
+#include <memory>
 #include "LinkLayerProcessor.h"
 
 class LinkLayerProcessorFactory {
 public:
-    LinkLayerProcessor * getProcessor(int type);
+    unique_ptr<LinkLayerProcessor> getProcessor(int type);
 };
 
 

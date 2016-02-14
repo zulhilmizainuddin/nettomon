@@ -6,9 +6,7 @@ void LinkLayerController::route(const struct pcap_pkthdr *pkthdr, const u_char *
                                 const vector<NetData> &ip6NetData) {
 
     auto processor = LinkLayerProcessorFactory().getProcessor(datalink);
-    if (processor != NULL) {
+    if (processor != nullptr) {
         processor->process(pkthdr, packet, ipNetData, ip6NetData);
-
-        delete processor;
     }
 }

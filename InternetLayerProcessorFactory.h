@@ -2,11 +2,12 @@
 #define NETTOMON_INTERNETLAYERPROCESSORFACTORY_H
 
 
+#include <memory>
 #include "InternetLayerProcessor.h"
 
 class InternetLayerProcessorFactory {
 public:
-    InternetLayerProcessor* getProcessor(int type);
+    unique_ptr<InternetLayerProcessor> getProcessor(int type);
 };
 
 

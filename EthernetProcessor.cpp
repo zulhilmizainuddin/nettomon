@@ -24,10 +24,8 @@ void EthernetProcessor::process(const struct pcap_pkthdr *pkthdr, const u_char *
     }
 
     auto processor = InternetLayerProcessorFactory().getProcessor(etherType);
-    if (processor != NULL) {
+    if (processor != nullptr) {
         processor->process(ipHeader, pkthdr, ipNetDataTemp);
-
-        delete processor;
     }
 }
 
