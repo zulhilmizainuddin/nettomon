@@ -13,7 +13,7 @@ string ProcessId::retrieveProcessId(const string &processName) {
     string procDirectoryName = "/proc";
 
     DIR* procDirectory = opendir(procDirectoryName.c_str());
-    if (procDirectory == NULL) {
+    if (procDirectory == nullptr) {
         perror(string(procDirectoryName + " does not exist").c_str());
         exit(1);
     }

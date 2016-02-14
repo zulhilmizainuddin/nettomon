@@ -29,7 +29,7 @@ void Sniffer::sniff() {
     pcap_t* packetDescriptor =
             pcap_open_live(deviceName.c_str(), DEFAULT_SNAPLEN, 0, 100, errbuf);
 
-    if (packetDescriptor == NULL) {
+    if (packetDescriptor == nullptr) {
         perror("Failed to listen to device");
         exit(1);
     }
@@ -47,7 +47,7 @@ void Sniffer::sniff() {
 
         LinkLayerController(datalink).route(pkthdr, packet, ipNetDataTemp, ip6NetDataTemp);
 
-    }, NULL);
+    }, nullptr);
 }
 
 

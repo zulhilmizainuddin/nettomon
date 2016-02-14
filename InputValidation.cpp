@@ -45,7 +45,7 @@ void InputValidation::ValidateOptions(int argc, char *options[]) {
 
         if (string(options[i]) == "-d") {
             if ((i + 1) < argc && regex_match(options[++i], regex("^[0-9]++$"))) {
-                runDuration = stoi(options[i], NULL, 10);
+                runDuration = stoi(options[i], nullptr, 10);
                 continue;
             }
             else {

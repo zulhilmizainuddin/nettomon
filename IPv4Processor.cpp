@@ -18,8 +18,8 @@ void IPv4Processor::process(const u_char *header, const struct pcap_pkthdr *pkth
         struct in_addr localIpAddr;
         struct in_addr remoteIpAddr;
 
-        localIpAddr.s_addr = (uint32_t)stoul(data.localIp, NULL, 16);
-        remoteIpAddr.s_addr = (uint32_t)stoul(data.remoteIp, NULL, 16);
+        localIpAddr.s_addr = (uint32_t)stoul(data.localIp, nullptr, 16);
+        remoteIpAddr.s_addr = (uint32_t)stoul(data.remoteIp, nullptr, 16);
 
         char localIpBuffer[INET_ADDRSTRLEN];
         char remoteIpBuffer[INET_ADDRSTRLEN];
