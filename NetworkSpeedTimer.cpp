@@ -33,7 +33,7 @@ void displayNetworkSpeed(const system::error_code &code, asio::deadline_timer *t
     Duration duration;
     duration.start();
 
-    string printSpeed("Upload: %7.1lf KB     Download: %7.1lf KB");
+    string printSpeed("Tx: %7.1lf KB     Rx: %7.1lf KB");
 
     printListFormat ?
             printSpeed = printSpeed + "\n" : printSpeed = "\r" + printSpeed;
