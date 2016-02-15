@@ -6,7 +6,7 @@
 
 void IPv4Processor::process(const u_char *header, const struct pcap_pkthdr *pkthdr, const vector<NetData> &netData) {
 
-    struct ip* ipHeader = (struct ip*)header;
+    const struct ip* ipHeader = reinterpret_cast<const struct ip*>(header);
 
     char srcIpBuffer[INET_ADDRSTRLEN];
     char dstIpBuffer[INET_ADDRSTRLEN];
@@ -18,8 +18,8 @@ void IPv4Processor::process(const u_char *header, const struct pcap_pkthdr *pkth
         struct in_addr localIpAddr;
         struct in_addr remoteIpAddr;
 
-        localIpAddr.s_addr = (uint32_t)stoul(data.localIp, nullptr, 16);
-        remoteIpAddr.s_addr = (uint32_t)stoul(data.remoteIp, nullptr, 16);
+        localIpAddr.s_addr = static_cast<uint32_t>(stoul(data.localIp, nullptr, 16));
+        remoteIpAddr.s_addr = static_cast<uint32_t>(stoul(data.remoteIp, nullptr, 16));
 
         char localIpBuffer[INET_ADDRSTRLEN];
         char remoteIpBuffer[INET_ADDRSTRLEN];

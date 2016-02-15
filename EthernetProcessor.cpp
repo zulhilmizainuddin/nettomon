@@ -6,12 +6,12 @@
 void EthernetProcessor::process(const struct pcap_pkthdr *pkthdr, const u_char *packet, const vector<NetData> &ipNetData,
                                 const vector<NetData> &ip6NetData) {
 
-    struct ether_header* etherHeader = (struct ether_header*)packet;
+    const struct ether_header* etherHeader = reinterpret_cast<const struct ether_header*>(packet);
     const u_char* ipHeader = packet + sizeof(struct ether_header);
 
     vector<NetData> ipNetDataTemp;
 
-    auto etherType = ntohs((uint16_t)etherHeader->ether_type);
+    auto etherType = ntohs(static_cast<uint16_t>(etherHeader->ether_type));
     switch (etherType) {
         case ETHERTYPE_IP:
             ipNetDataTemp = move(ipNetData);

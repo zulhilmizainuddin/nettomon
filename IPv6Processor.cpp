@@ -7,7 +7,7 @@
 
 void IPv6Processor::process(const u_char *header, const struct pcap_pkthdr *pkthdr, const vector<NetData> &netData) {
 
-    struct ip6_hdr* ip6Header = (struct ip6_hdr*)header;
+    const struct ip6_hdr* ip6Header = reinterpret_cast<const struct ip6_hdr*>(header);
 
     char srcIp6Buffer[INET6_ADDRSTRLEN];
     char dstIp6Buffer[INET6_ADDRSTRLEN];

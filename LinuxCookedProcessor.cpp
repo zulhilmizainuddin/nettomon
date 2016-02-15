@@ -7,12 +7,12 @@
 void LinuxCookedProcessor::process(const struct pcap_pkthdr *pkthdr, const u_char *packet, const vector<NetData> &ipNetData,
                                    const vector<NetData> &ip6NetData) {
 
-    struct sll_header* linuxCookedHeader = (struct sll_header*)packet;
+    const struct sll_header* linuxCookedHeader = reinterpret_cast<const struct sll_header*>(packet);
     const u_char* ipHeader = packet + sizeof(sll_header);
 
     vector<NetData> ipNetDataTemp;
 
-    auto etherType = ntohs((uint16_t)linuxCookedHeader->sll_protocol);
+    auto etherType = ntohs(static_cast<uint16_t>(linuxCookedHeader->sll_protocol));
     switch (etherType) {
         case ETHERTYPE_IP:
             ipNetDataTemp = move(ipNetData);
