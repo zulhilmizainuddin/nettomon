@@ -26,6 +26,6 @@ void LinuxCookedProcessor::process(const struct pcap_pkthdr *pkthdr, const u_cha
 
     auto processor = InternetLayerProcessorFactory().getProcessor(etherType);
     if (processor != nullptr) {
-        processor->process(ipHeader, pkthdr, ipNetDataTemp);
+        processor->process(ipHeader, pkthdr, packet, ipNetDataTemp);
     }
 }

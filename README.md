@@ -1,8 +1,23 @@
 # nettomon [![Build Status](https://travis-ci.org/zulhilmizainuddin/nettomon.svg?branch=master)](https://travis-ci.org/zulhilmizainuddin/nettomon)
-C++ program for monitoring Linux and Android process network upload and download speed using libpcap.
-Supports IPv4 and IPv6.
+C++ program for monitoring Linux and Android process specific network usage using libpcap.
+
+* Supports IPv4 and IPv6.
+* Monitor process specific upload and download speed.
+* Capture process specific packets to pcap file.
 
 <img src="https://github.com/zulhilmizainuddin/nettomon/blob/master/nettomon.gif">
+
+##Usage
+
+View help by executing:
+
+    nettomon -h
+
+    Usage: nettomon <pid | process name> [OPTIONS...]
+    
+      -l            list result line by line
+      -d n          execute program for n number of seconds
+      -w file       dump captured packets into pcap format at file location
 
 ##Linux
 
@@ -80,14 +95,3 @@ Nettomon must be executed with superuser permission as it is using libpcap for t
 Execute the program by passing it the pid of the process to be monitored.
 
     adb shell su -c LD_LIBRARY_PATH=/data/local/tmp ./data/local/tmp/nettomon <pid or process name>
-
-##Help
-
-View help by executing:
-
-    nettomon -h
-
-    Usage: nettomon <pid | process name> [OPTIONS...]
-    
-      -l            list result line by line
-      -d n          execute program for n number of seconds

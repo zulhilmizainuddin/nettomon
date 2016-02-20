@@ -1,10 +1,12 @@
 #include <netinet/ip.h>
 #include <arpa/inet.h>
 #include "PacketPayload.h"
+#include "PcapDumper.h"
 #include "IPv4Processor.h"
 
 
-void IPv4Processor::process(const u_char *header, const struct pcap_pkthdr *pkthdr, const vector<NetData> &netData) {
+void IPv4Processor::process(const u_char *header, const struct pcap_pkthdr *pkthdr, const u_char *packet,
+                            const vector<NetData> &netData) {
 
     const struct ip* ipHeader = reinterpret_cast<const struct ip*>(header);
 
@@ -29,12 +31,14 @@ void IPv4Processor::process(const u_char *header, const struct pcap_pkthdr *pkth
 
         if (srcIp == localIp && dstIp == remoteIp) {
             PacketPayload::getInstance().addUploadedBytes(pkthdr->caplen);
+            PcapDumper::getInstance().writePcapToFile(pkthdr, packet);
             /*PacketPayload::getInstance().addUploadedBytes(ntohs(ipHeader->ip_len));*/
             break;
         }
 
         if (srcIp == remoteIp && dstIp == localIp) {
             PacketPayload::getInstance().addDownloadedBytes(pkthdr->caplen);
+            PcapDumper::getInstance().writePcapToFile(pkthdr, packet);
             /*PacketPayload::getInstance().addDownloadedBytes(ntohs(ipHeader->ip_len));*/
             break;
         }

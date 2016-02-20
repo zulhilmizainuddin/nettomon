@@ -22,6 +22,7 @@ set(SOURCE_FILES
         NetData.h
         NetworkSpeedTimer.cpp NetworkSpeedTimer.h
         PacketPayload.h
+        PcapDumper.cpp PcapDumper.h
         ProcessId.cpp ProcessId.h
         ProcFd.cpp ProcFd.h
         ProcNet.cpp ProcNet.h

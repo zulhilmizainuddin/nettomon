@@ -4,13 +4,12 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include "PacketPayload.h"
 #include "Duration.h"
+#include "InputValidation.h"
 #include "NetworkSpeedTimer.h"
+
 
 using namespace std;
 using namespace boost;
-
-extern bool printListFormat;
-extern int runDuration;
 
 void displayNetworkSpeed(const system::error_code &code, asio::deadline_timer *timer);
 
@@ -33,9 +32,9 @@ void displayNetworkSpeed(const system::error_code &code, asio::deadline_timer *t
     Duration duration;
     duration.start();
 
-    string printSpeed("Tx: %7.1lf KB     Rx: %7.1lf KB");
+    string printSpeed("Tx: %8.1lf KB  |  Rx: %8.1lf KB");
 
-    printListFormat ?
+    InputValidation::getInstance().printListFormat ?
             printSpeed = printSpeed + "\n" : printSpeed = "\r" + printSpeed;
 
     printf(printSpeed.c_str(),
@@ -46,8 +45,8 @@ void displayNetworkSpeed(const system::error_code &code, asio::deadline_timer *t
     PacketPayload::getInstance().resetUploadedBytes();
     PacketPayload::getInstance().resetDownloadedBytes();
 
-    if (runDuration != -1) {
-        if (--runDuration == 0) {
+    if (InputValidation::getInstance().runDuration != -1) {
+        if (--InputValidation::getInstance().runDuration == 0) {
             exit(0);
         }
     }

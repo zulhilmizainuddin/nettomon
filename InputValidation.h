@@ -7,10 +7,25 @@ using namespace std;
 
 class InputValidation {
 public:
-    void ValidateNumberOfArguments(int argc);
-    void ValidateHelp(string option);
-    void ValidatePID(string &pid);
-    void ValidateOptions(int argc, char *options[]);
+    bool printListFormat = false;
+    int runDuration = -1;
+    string pcapDumpLocation = "";
+
+public:
+    static InputValidation & getInstance() {
+        static InputValidation instance;
+        return instance;
+    }
+
+    void validateNumberOfArguments(int argc);
+    void validateHelp(string option);
+    void validatePID(string &pid);
+    void validateOptions(int argc, char **options);
+
+private:
+    InputValidation() { }
+    InputValidation(InputValidation &);
+    void operator=(InputValidation const&);
 };
 
 

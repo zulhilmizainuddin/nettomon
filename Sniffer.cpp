@@ -1,8 +1,9 @@
 #include <pcap.h>
 #include <mutex>
 #include "LinkLayerController.h"
+#include "PcapDumper.h"
+#include "InputValidation.h"
 #include "Sniffer.h"
-
 
 vector<NetData> ipNetData;
 vector<NetData> ip6NetData;
@@ -35,6 +36,9 @@ void Sniffer::sniff() {
     }
 
     datalink = pcap_datalink(packetDescriptor);
+
+    PcapDumper::getInstance().openPcapDumpFile(
+            packetDescriptor, InputValidation::getInstance().pcapDumpLocation);
 
     pcap_loop(packetDescriptor, -1, [](u_char* args, const struct pcap_pkthdr* pkthdr, const u_char* packet) {
 

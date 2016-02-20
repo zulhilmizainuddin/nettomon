@@ -2,10 +2,12 @@
 #include <netinet/ip6.h>
 #include <arpa/inet.h>
 #include "PacketPayload.h"
+#include "PcapDumper.h"
 #include "IPv6Processor.h"
 
 
-void IPv6Processor::process(const u_char *header, const struct pcap_pkthdr *pkthdr, const vector<NetData> &netData) {
+void IPv6Processor::process(const u_char *header, const struct pcap_pkthdr *pkthdr, const u_char *packet,
+                            const vector<NetData> &netData) {
 
     const struct ip6_hdr* ip6Header = reinterpret_cast<const struct ip6_hdr*>(header);
 
@@ -39,11 +41,13 @@ void IPv6Processor::process(const u_char *header, const struct pcap_pkthdr *pkth
 
         if (srcIp6 == localIp6 && dstIp6 == remoteIp6) {
             PacketPayload::getInstance().addUploadedBytes(pkthdr->caplen);
+            PcapDumper::getInstance().writePcapToFile(pkthdr, packet);
             break;
         }
 
         if (srcIp6 == remoteIp6 && dstIp6 == localIp6) {
             PacketPayload::getInstance().addDownloadedBytes(pkthdr->caplen);
+            PcapDumper::getInstance().writePcapToFile(pkthdr, packet);
             break;
         }
     }

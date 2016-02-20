@@ -3,26 +3,24 @@
 #include "InputValidation.h"
 
 
-bool printListFormat = false;
-int runDuration = -1;
-
-void InputValidation::ValidateNumberOfArguments(int argc) {
+void InputValidation::validateNumberOfArguments(int argc) {
     if (argc < 2) {
         perror("Usage: nettomon <pid | process name> [OPTIONS...]");
         exit(1);
     }
 }
 
-void InputValidation::ValidateHelp(string option) {
+void InputValidation::validateHelp(string option) {
     if (string(option) == "-h") {
         printf("Usage: nettomon <pid | process name> [OPTIONS...]\n\n");
         printf("  -l\t\t\tlist result line by line\n");
         printf("  -d n\t\t\texecute program for n number of seconds\n");
+        printf("  -w file\t\t\tdump captured packets into pcap format at file location\n");
         exit(0);
     }
 }
 
-void InputValidation::ValidatePID(string &pid) {
+void InputValidation::validatePID(string &pid) {
     if (!regex_match(pid, regex("^[0-9]{1,5}+$"))) {
         string processId = ProcessId().getProcessId(pid);
 
@@ -36,7 +34,7 @@ void InputValidation::ValidatePID(string &pid) {
     }
 }
 
-void InputValidation::ValidateOptions(int argc, char *options[]) {
+void InputValidation::validateOptions(int argc, char **options) {
     for (int i = 2; i < argc; ++i) {
         if (string(options[i]) == "-l") {
             printListFormat = true;
@@ -49,7 +47,18 @@ void InputValidation::ValidateOptions(int argc, char *options[]) {
                 continue;
             }
             else {
-                perror("Option -d must be followed an integer");
+                perror("Option -d must be followed by an integer");
+                exit(1);
+            }
+        }
+
+        if (string(options[i]) == "-w") {
+            if ((i + 1) < argc) {
+                pcapDumpLocation = options[++i];
+                continue;
+            }
+            else {
+                perror("Option -w must be followed by a valid pcap dump location");
                 exit(1);
             }
         }

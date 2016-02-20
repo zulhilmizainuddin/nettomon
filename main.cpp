@@ -9,14 +9,12 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
 
-    auto validation = InputValidation();
-
     string pid(argv[1]);
 
-    validation.ValidateNumberOfArguments(argc);
-    validation.ValidateHelp(argv[1]);
-    validation.ValidatePID(pid);
-    validation.ValidateOptions(argc, argv);
+    InputValidation::getInstance().validateNumberOfArguments(argc);
+    InputValidation::getInstance().validateHelp(argv[1]);
+    InputValidation::getInstance().validatePID(pid);
+    InputValidation::getInstance().validateOptions(argc, argv);
 
     auto procReadTimer = ProcReadTimer();
     auto sniffer = Sniffer(&procReadTimer);
