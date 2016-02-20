@@ -23,7 +23,7 @@ void IPv4Processor::process(const u_char *header, const struct pcap_pkthdr *pkth
 
     for (auto data: ip6NetData) {
         struct NetData netData = move(IPv4MappedIPv6().extractIPv4NetData(data));
-        if (!netData.localIp.empty()) {
+        if (!netData.localIp.empty() && !netData.remoteIp.empty()) {
             ipNetDataJoined.push_back(move(netData));
         }
     }
