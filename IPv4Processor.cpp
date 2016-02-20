@@ -2,6 +2,7 @@
 #include <arpa/inet.h>
 #include "PacketPayload.h"
 #include "PcapDumper.h"
+#include "IPv4MappedIPv6.h"
 #include "IPv4Processor.h"
 
 
@@ -16,7 +17,18 @@ void IPv4Processor::process(const u_char *header, const struct pcap_pkthdr *pkth
     string srcIp = inet_ntop(AF_INET, &ipHeader->ip_src, srcIpBuffer, INET_ADDRSTRLEN);
     string dstIp = inet_ntop(AF_INET, &ipHeader->ip_dst, dstIpBuffer, INET_ADDRSTRLEN);
 
-    for (auto data: ipNetData) {
+    vector<NetData> ipNetDataJoined;
+    ipNetDataJoined.reserve(100);
+    ipNetDataJoined = move(const_cast<vector<NetData>&>(ipNetData));
+
+    for (auto data: ip6NetData) {
+        struct NetData netData = move(IPv4MappedIPv6().extractIPv4NetData(data));
+        if (!netData.localIp.empty()) {
+            ipNetDataJoined.push_back(move(netData));
+        }
+    }
+
+    for (auto data: ipNetDataJoined) {
         struct in_addr localIpAddr;
         struct in_addr remoteIpAddr;
 

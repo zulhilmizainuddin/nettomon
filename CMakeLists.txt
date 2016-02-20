@@ -12,6 +12,7 @@ set(SOURCE_FILES
         InputValidation.cpp InputValidation.h
         InternetLayerProcessor.h
         InternetLayerProcessorFactory.cpp InternetLayerProcessorFactory.h
+        IPv4MappedIPv6.cpp IPv4MappedIPv6.h
         IPv4Processor.cpp IPv4Processor.h
         IPv6Processor.cpp IPv6Processor.h
         LinkLayerController.cpp LinkLayerController.h
