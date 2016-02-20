@@ -7,7 +7,7 @@
 
 
 void IPv6Processor::process(const u_char *header, const struct pcap_pkthdr *pkthdr, const u_char *packet,
-                            const vector<NetData> &netData) {
+                            const vector<NetData> &ipNetData, const vector<NetData> &ip6NetData) {
 
     const struct ip6_hdr* ip6Header = reinterpret_cast<const struct ip6_hdr*>(header);
 
@@ -17,7 +17,7 @@ void IPv6Processor::process(const u_char *header, const struct pcap_pkthdr *pkth
     string srcIp6 = inet_ntop(AF_INET6, &ip6Header->ip6_src, srcIp6Buffer, INET6_ADDRSTRLEN);
     string dstIp6 = inet_ntop(AF_INET6, &ip6Header->ip6_dst, dstIp6Buffer, INET6_ADDRSTRLEN);
 
-    for (auto data: netData) {
+    for (auto data: ip6NetData) {
         struct in6_addr localIp6Addr;
         struct in6_addr remoteIp6Addr;
 

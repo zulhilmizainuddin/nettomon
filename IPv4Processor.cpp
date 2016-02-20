@@ -6,7 +6,7 @@
 
 
 void IPv4Processor::process(const u_char *header, const struct pcap_pkthdr *pkthdr, const u_char *packet,
-                            const vector<NetData> &netData) {
+                            const vector<NetData> &ipNetData, const vector<NetData> &ip6NetData) {
 
     const struct ip* ipHeader = reinterpret_cast<const struct ip*>(header);
 
@@ -16,7 +16,7 @@ void IPv4Processor::process(const u_char *header, const struct pcap_pkthdr *pkth
     string srcIp = inet_ntop(AF_INET, &ipHeader->ip_src, srcIpBuffer, INET_ADDRSTRLEN);
     string dstIp = inet_ntop(AF_INET, &ipHeader->ip_dst, dstIpBuffer, INET_ADDRSTRLEN);
 
-    for (auto data: netData) {
+    for (auto data: ipNetData) {
         struct in_addr localIpAddr;
         struct in_addr remoteIpAddr;
 
