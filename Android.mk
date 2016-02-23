@@ -24,7 +24,10 @@ LOCAL_SRC_FILES :=\
         ProcNet.cpp\
         ProcNetPublisher.cpp\
         ProcReadTimer.cpp\
-        Sniffer.cpp
+        Sniffer.cpp\
+        TcpProcessor.cpp\
+        TransportLayerProcessorFactory.cpp\
+        UdpProcessor.cpp
 
 LOCAL_CFLAGS += -O3
 #LOCAL_CFLAGS += -fopenmp

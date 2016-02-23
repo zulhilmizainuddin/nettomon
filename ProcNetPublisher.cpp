@@ -1,8 +1,11 @@
 #include "ProcNetPublisher.h"
 
-void ProcNetPublisher::setNetData(const vector<NetData> &ipNetData, const vector<NetData> &ip6NetData) {
-    this->ipNetData = ipNetData;
-    this->ip6NetData = ip6NetData;
+void ProcNetPublisher::setNetData(const vector<NetData> &tcpNetData, const vector<NetData> &udpNetData, const vector<NetData> &tcp6NetData,
+                                  const vector<NetData> &udp6NetData) {
+    this->tcpNetData = tcpNetData;
+    this->udpNetData = udpNetData;
+    this->tcp6NetData = tcp6NetData;
+    this->udp6NetData = udp6NetData;
 }
 
 void ProcNetPublisher::registerObserver(ProcNetObserver * observer) {
@@ -11,6 +14,6 @@ void ProcNetPublisher::registerObserver(ProcNetObserver * observer) {
 
 void ProcNetPublisher::notifyObservers() {
     for (ProcNetObserver * observer: observers) {
-        observer->updateNetData(ipNetData, ip6NetData);
+        observer->updateNetData(tcpNetData, udpNetData, tcp6NetData, udp6NetData);
     }
 }

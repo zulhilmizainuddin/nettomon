@@ -12,11 +12,14 @@ class ProcNetObserver;
 class ProcNetPublisher {
 private:
     vector<ProcNetObserver *> observers;
-    vector<NetData> ipNetData;
-    vector<NetData> ip6NetData;
+    vector<NetData> tcpNetData;
+    vector<NetData> udpNetData;
+    vector<NetData> tcp6NetData;
+    vector<NetData> udp6NetData;
 
 public:
-    void setNetData(const vector<NetData> &ipNetData, const vector<NetData> &ip6NetData);
+    void setNetData(const vector<NetData> &tcpNetData, const vector<NetData> &udpNetData,
+                        const vector<NetData> &tcp6NetData, const vector<NetData> &udp6NetData);
     void registerObserver(ProcNetObserver * observer);
     void notifyObservers();
 };

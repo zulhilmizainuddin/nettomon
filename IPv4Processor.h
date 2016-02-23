@@ -7,7 +7,8 @@
 class IPv4Processor : public InternetLayerProcessor {
 public:
     virtual void process(const u_char *header, const struct pcap_pkthdr *pkthdr, const u_char *packet,
-                             const vector<NetData> &ipNetData, const vector<NetData> &ip6NetData);
+                             const vector<NetData> &tcpNetData, const vector<NetData> &udpNetData, const vector<NetData> &tcp6NetData,
+                             const vector<NetData> &udp6NetData);
 };
 
 

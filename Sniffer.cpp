@@ -5,8 +5,10 @@
 #include "InputValidation.h"
 #include "Sniffer.h"
 
-vector<NetData> ipNetData;
-vector<NetData> ip6NetData;
+vector<NetData> tcpNetData;
+vector<NetData> udpNetData;
+vector<NetData> tcp6NetData;
+vector<NetData> udp6NetData;
 
 mutex netDataMutex;
 
@@ -44,20 +46,28 @@ void Sniffer::sniff() {
 
         netDataMutex.lock();
 
-        vector<NetData> ipNetDataTemp(ipNetData);
-        vector<NetData> ip6NetDataTemp(ip6NetData);
+        vector<NetData> tcpNetDataTemp(tcpNetData);
+        vector<NetData> udpNetDataTemp(udpNetData);
+        vector<NetData> tcp6NetDataTemp(tcp6NetData);
+        vector<NetData> udp6NetDataTemp(udp6NetData);
 
         netDataMutex.unlock();
 
-        LinkLayerController(datalink).route(pkthdr, packet, ipNetDataTemp, ip6NetDataTemp);
+        LinkLayerController(datalink).route(pkthdr, packet, tcpNetDataTemp, udpNetDataTemp, tcp6NetDataTemp,
+                                            udp6NetDataTemp);
 
     }, nullptr);
 }
 
 
-void Sniffer::updateNetData(const vector<NetData> &ipNetData, const vector<NetData> &ip6NetData) {
+void Sniffer::updateNetData(const vector<NetData> &tcpNetData, const vector<NetData> &udpNetData,
+                            const vector<NetData> &tcp6NetData, const vector<NetData> &udp6NetData) {
     netDataMutex.lock();
-    ::ipNetData = ipNetData;
-    ::ip6NetData = ip6NetData;
+
+    ::tcpNetData = move(tcpNetData);
+    ::udpNetData = move(udpNetData);
+    ::tcp6NetData = move(tcp6NetData);
+    ::udp6NetData = move(udp6NetData);
+
     netDataMutex.unlock();
 }

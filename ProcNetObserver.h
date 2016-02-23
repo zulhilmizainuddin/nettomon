@@ -11,7 +11,8 @@ class ProcNetObserver {
 public:
     virtual ~ProcNetObserver() { }
 
-    virtual void updateNetData(const vector<NetData> &ipNetData, const vector<NetData> &ip6NetData) = 0;
+    virtual void updateNetData(const vector<NetData> &tcpNetData, const vector<NetData> &udpNetData,
+                                   const vector<NetData> &tcp6NetData, const vector<NetData> &udp6NetData) = 0;
 
 protected:
     ProcNetPublisher * procPublisher;

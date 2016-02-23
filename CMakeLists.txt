@@ -31,7 +31,11 @@ set(SOURCE_FILES
         ProcNetPublisher.cpp ProcNetPublisher.h
         ProcReadTimer.cpp ProcReadTimer.h
         sll.h
-        Sniffer.cpp Sniffer.h)
+        Sniffer.cpp Sniffer.h
+        TcpProcessor.cpp TcpProcessor.h
+        TransportLayerProcessor.h
+        TransportLayerProcessorFactory.cpp TransportLayerProcessorFactory.h
+        UdpProcessor.cpp UdpProcessor.h)
 
 find_path(PCAP_ROOT_DIR NAMES include/pcap.h)
 find_path(PCAP_INCLUDE_DIR NAMES pcap.h HINTS ${PCAP_ROOT_DIR}/include)

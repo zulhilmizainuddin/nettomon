@@ -85,27 +85,7 @@ void procRead(const system::error_code &code, asio::deadline_timer *timer, const
         udp6NetData = InodeIpHelper::filterProccessIp(socketsInode, udp6InodeIp);
     }
 
-    vector<NetData> ipNetData;
-    vector<NetData> ip6NetData;
-
-    #pragma omp parallel sections
-    {
-        #pragma omp section
-        {
-            ipNetData.reserve(tcpNetData.size() + udpNetData.size());
-            ipNetData.insert(ipNetData.end(), tcpNetData.begin(), tcpNetData.end());
-            ipNetData.insert(ipNetData.end(), udpNetData.begin(), udpNetData.end());
-        }
-
-        #pragma omp section
-        {
-            ip6NetData.reserve(tcp6NetData.size() + udp6NetData.size());
-            ip6NetData.insert(ip6NetData.end(), tcp6NetData.begin(), tcp6NetData.end());
-            ip6NetData.insert(ip6NetData.end(), udp6NetData.begin(), udp6NetData.end());
-        }
-    }
-
-    procNetPublisher->setNetData(ipNetData, ip6NetData);
+    procNetPublisher->setNetData(tcpNetData, udpNetData, tcp6NetData, udp6NetData);
     procNetPublisher->notifyObservers();
 
     duration.end();
