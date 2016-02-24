@@ -25,27 +25,8 @@ void IPv4Processor::process(const u_char *header, const struct pcap_pkthdr *pkth
         auto srcPort = processor->getSourcePort(header + sizeof(struct ip));
         auto dstPort = processor->getDestinationPort(header + sizeof(struct ip));
 
-        vector<NetData> netDataJoined;
-        netDataJoined.reserve(100);
-
-        vector<NetData> ip6NetDataTemp;
-
-        if (protocol == IPPROTO_TCP) {
-            netDataJoined = move(const_cast<vector<NetData>&>(tcpNetData));
-            ip6NetDataTemp = move(tcp6NetData);
-        } else if (protocol == IPPROTO_UDP) {
-            netDataJoined = move(const_cast<vector<NetData>&>(udpNetData));
-            ip6NetDataTemp = move(udp6NetData);
-        }
-
-        for (auto data: ip6NetDataTemp) {
-            struct NetData netData = move(IPv4MappedIPv6().extractIPv4NetData(data));
-            if (!netData.localIp.empty()) {
-                netDataJoined.push_back(move(netData));
-            }
-        }
-
-        for (auto data: netDataJoined) {
+        auto ipNetData = move(prepareNetData(protocol, tcpNetData, udpNetData, tcp6NetData, udp6NetData));
+        for (auto data: ipNetData) {
             struct in_addr localIpAddr;
 
             localIpAddr.s_addr = static_cast<uint32_t>(stoul(data.localIp, nullptr, 16));
@@ -68,4 +49,30 @@ void IPv4Processor::process(const u_char *header, const struct pcap_pkthdr *pkth
             }
         }
     }
+}
+
+vector<NetData> IPv4Processor::prepareNetData(u_int8_t protocol, const vector<NetData> &tcpNetData,
+                                               const vector<NetData> &udpNetData, const vector<NetData> &tcp6NetData,
+                                               const vector<NetData> &udp6NetData) {
+    vector<NetData> netDataJoined;
+    netDataJoined.reserve(100);
+
+    vector<NetData> ip6NetData;
+
+    if (protocol == IPPROTO_TCP) {
+        netDataJoined = move(const_cast<vector<NetData>&>(tcpNetData));
+        ip6NetData = move(tcp6NetData);
+    } else if (protocol == IPPROTO_UDP) {
+        netDataJoined = move(const_cast<vector<NetData>&>(udpNetData));
+        ip6NetData = move(udp6NetData);
+    }
+
+    for (auto data: ip6NetData) {
+        struct NetData netData = move(IPv4MappedIPv6().extractIPv4NetData(data));
+        if (!netData.localIp.empty()) {
+            netDataJoined.push_back(move(netData));
+        }
+    }
+
+    return netDataJoined;
 }
