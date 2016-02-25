@@ -26,7 +26,7 @@ void IPv6Processor::process(const u_char *header, const struct pcap_pkthdr *pkth
         auto dstPort = processor->getDestinationPort(header + sizeof(struct ip6_hdr));
 
         auto ipNetData = move(prepareNetData(protocol, tcp6NetData, udp6NetData));
-        for (auto data: ipNetData) {
+        for (auto& data: ipNetData) {
             struct in6_addr localIp6Addr;
 
             char localIp6Buffer[INET6_ADDRSTRLEN];
@@ -59,10 +59,15 @@ vector<NetData> IPv6Processor::prepareNetData(uint8_t protocol, const vector<Net
                                               const vector<NetData> &udp6NetData) {
     vector<NetData> ip6NetData;
 
-    if (protocol == IPPROTO_TCP) {
-        ip6NetData = move(tcp6NetData);
-    } else if (protocol == IPPROTO_UDP) {
-        ip6NetData = move(udp6NetData);
+    switch (protocol) {
+        case IPPROTO_TCP:
+            ip6NetData = move(tcp6NetData);
+            break;
+        case IPPROTO_UDP:
+            ip6NetData = move(udp6NetData);
+            break;
+        default:
+            break;
     }
 
     return ip6NetData;

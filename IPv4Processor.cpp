@@ -26,7 +26,7 @@ void IPv4Processor::process(const u_char *header, const struct pcap_pkthdr *pkth
         auto dstPort = processor->getDestinationPort(header + sizeof(struct ip));
 
         auto ipNetData = move(prepareNetData(protocol, tcpNetData, udpNetData, tcp6NetData, udp6NetData));
-        for (auto data: ipNetData) {
+        for (auto& data: ipNetData) {
             struct in_addr localIpAddr;
 
             localIpAddr.s_addr = static_cast<uint32_t>(stoul(data.localIp, nullptr, 16));
@@ -59,15 +59,20 @@ vector<NetData> IPv4Processor::prepareNetData(u_int8_t protocol, const vector<Ne
 
     vector<NetData> ip6NetData;
 
-    if (protocol == IPPROTO_TCP) {
-        netDataJoined = move(const_cast<vector<NetData>&>(tcpNetData));
-        ip6NetData = move(tcp6NetData);
-    } else if (protocol == IPPROTO_UDP) {
-        netDataJoined = move(const_cast<vector<NetData>&>(udpNetData));
-        ip6NetData = move(udp6NetData);
+    switch (protocol) {
+        case IPPROTO_TCP:
+            netDataJoined = move(const_cast<vector<NetData>&>(tcpNetData));
+            ip6NetData = move(tcp6NetData);
+            break;
+        case IPPROTO_UDP:
+            netDataJoined = move(const_cast<vector<NetData>&>(udpNetData));
+            ip6NetData = move(udp6NetData);
+            break;
+        default:
+            break;
     }
 
-    for (auto data: ip6NetData) {
+    for (auto& data: ip6NetData) {
         struct NetData netData = move(IPv4MappedIPv6().extractIPv4NetData(data));
         if (!netData.localIp.empty()) {
             netDataJoined.push_back(move(netData));
