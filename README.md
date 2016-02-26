@@ -1,7 +1,15 @@
 # nettomon [![Build Status](https://travis-ci.org/zulhilmizainuddin/nettomon.svg?branch=master)](https://travis-ci.org/zulhilmizainuddin/nettomon)
-C++ program for monitoring Linux and Android process specific network usage using libpcap.
+C++ program for monitoring and capturing Linux and Android process specific network usage using libpcap.
 
-* Supports IPv4 and IPv6.
+* Supported link layer:
+    * Ethernet
+    * Linux cooked/SLL
+* Supported internet layer:
+    * IPv4
+    * IPv6
+* Supported transport layer:
+    * TCP
+    * UDP
 * Monitor process specific upload and download speed.
 * Capture process specific packets to pcap file.
 
@@ -74,7 +82,7 @@ Clone the repository into nettomon/jni directory.
 
 Build the source code. The binaries will be under the libs directory.
 
-    ndk-build APP_ABI=armeabi-v7a
+    ndk-build
     
 ###Deploy
 
