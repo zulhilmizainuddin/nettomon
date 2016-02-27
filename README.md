@@ -3,6 +3,8 @@ C++ program for monitoring and capturing Linux and Android process specific netw
 
 <img src="https://github.com/zulhilmizainuddin/nettomon/blob/master/nettomon.gif">
 
+* Monitor process specific upload and download speed.
+* Capture process specific packets to pcap file.
 * Supported link layer:
     * Ethernet
     * Linux cooked/SLL
@@ -12,8 +14,6 @@ C++ program for monitoring and capturing Linux and Android process specific netw
 * Supported transport layer:
     * TCP
     * UDP
-* Monitor process specific upload and download speed.
-* Capture process specific packets to pcap file.
 
 ##Usage
 
