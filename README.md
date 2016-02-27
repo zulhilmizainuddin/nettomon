@@ -1,6 +1,8 @@
 # nettomon [![Build Status](https://travis-ci.org/zulhilmizainuddin/nettomon.svg?branch=master)](https://travis-ci.org/zulhilmizainuddin/nettomon)
 C++ program for monitoring and capturing Linux and Android process specific network usage using libpcap.
 
+<img src="https://github.com/zulhilmizainuddin/nettomon/blob/master/nettomon.gif">
+
 * Supported link layer:
     * Ethernet
     * Linux cooked/SLL
@@ -12,8 +14,6 @@ C++ program for monitoring and capturing Linux and Android process specific netw
     * UDP
 * Monitor process specific upload and download speed.
 * Capture process specific packets to pcap file.
-
-<img src="https://github.com/zulhilmizainuddin/nettomon/blob/master/nettomon.gif">
 
 ##Usage
 
