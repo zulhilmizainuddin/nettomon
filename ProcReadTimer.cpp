@@ -16,8 +16,7 @@ using namespace std;
 using namespace boost;
 
 void procRead(const system::error_code &code, asio::deadline_timer *timer, const string &pid,
-              const vector<string>&previousSocketsInode);
-bool newConnectionCreated(const vector<string>& currentSocketsInode, const vector<string>& previousSocketsInode);
+              const vector<string> previousSocketsInode);
 
 ProcNetPublisher* procNetPublisher;
 
@@ -40,7 +39,7 @@ void ProcReadTimer::start(string pid) {
 }
 
 void procRead(const system::error_code &code, asio::deadline_timer *timer, const string &pid,
-              const vector<string>&previousSocketsInode) {
+              const vector<string> previousSocketsInode) {
 
     Duration duration;
     duration.start();
@@ -53,7 +52,7 @@ void procRead(const system::error_code &code, asio::deadline_timer *timer, const
 
     socketsInode = ProcFd(pid).getSocketInodeList();
 
-    if (newConnectionCreated(socketsInode, previousSocketsInode)) {
+    if (!equal(previousSocketsInode.begin(), previousSocketsInode.end(), socketsInode.begin())) {
 
         #pragma omp parallel sections
         {
@@ -98,18 +97,4 @@ void procRead(const system::error_code &code, asio::deadline_timer *timer, const
 
     timer->expires_at(timer->expires_at() + posix_time::microseconds(500000 - duration.inMicroSeconds()));
     timer->async_wait(bind(procRead, asio::placeholders::error, timer, pid, socketsInode));
-}
-
-bool newConnectionCreated(const vector<string>& currentSocketsInode, const vector<string>& previousSocketsInode) {
-    bool isNewConnectionCreated = false;
-
-    for (auto& previousInode: previousSocketsInode) {
-        auto iter = find(currentSocketsInode.begin(), currentSocketsInode.end(), previousInode);
-        if (iter == currentSocketsInode.end()) {
-            isNewConnectionCreated = true;
-            break;
-        }
-    }
-
-    return isNewConnectionCreated;
 }
