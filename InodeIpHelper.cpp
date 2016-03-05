@@ -7,7 +7,7 @@ vector<NetData> InodeIpHelper::filterProccessIp(const vector<string>& socketInod
     for (auto& socketInode: socketInodes) {
         auto inodeIp = inodeIps.find(socketInode);
         if (inodeIp != inodeIps.end()) {
-            filteredResult.push_back(move(inodeIp->second));
+            filteredResult.push_back(inodeIp->second);
         }
     }
 
