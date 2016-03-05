@@ -5,14 +5,8 @@
 #include "InputValidation.h"
 #include "Sniffer.h"
 
-vector<NetData> tcpNetData;
-vector<NetData> udpNetData;
-vector<NetData> tcp6NetData;
-vector<NetData> udp6NetData;
 
 mutex netDataMutex;
-
-int datalink = 0;
 
 Sniffer::Sniffer(ProcNetPublisher *procPublisher) {
     this->procPublisher = procPublisher;
@@ -37,7 +31,7 @@ void Sniffer::sniff() {
         exit(1);
     }
 
-    datalink = pcap_datalink(packetDescriptor);
+    data.datalink = pcap_datalink(packetDescriptor);
 
     PcapDumper::getInstance().openPcapDumpFile(
             packetDescriptor, InputValidation::getInstance().pcapDumpLocation);
@@ -46,28 +40,37 @@ void Sniffer::sniff() {
 
         netDataMutex.lock();
 
-        vector<NetData> tcpNetDataTemp(tcpNetData);
-        vector<NetData> udpNetDataTemp(udpNetData);
-        vector<NetData> tcp6NetDataTemp(tcp6NetData);
-        vector<NetData> udp6NetDataTemp(udp6NetData);
+        auto data = reinterpret_cast<struct Data*>(args);
+
+        vector<NetData> tcpNetData(data->tcpNetData);
+        vector<NetData> udpNetData(data->udpNetData);
+        vector<NetData> tcp6NetData(data->tcp6NetData);
+        vector<NetData> udp6NetData(data->udp6NetData);
 
         netDataMutex.unlock();
 
-        LinkLayerController(datalink).route(pkthdr, packet, tcpNetDataTemp, udpNetDataTemp, tcp6NetDataTemp,
-                                            udp6NetDataTemp);
+        LinkLayerController(data->datalink)
+                .route(pkthdr,
+                       packet,
+                       tcpNetData,
+                       udpNetData,
+                       tcp6NetData,
+                       udp6NetData
+                );
 
-    }, nullptr);
+    }, reinterpret_cast<u_char*>(&data));
 }
 
 
 void Sniffer::updateNetData(const vector<NetData> &tcpNetData, const vector<NetData> &udpNetData,
                             const vector<NetData> &tcp6NetData, const vector<NetData> &udp6NetData) {
+
     netDataMutex.lock();
 
-    ::tcpNetData = move(tcpNetData);
-    ::udpNetData = move(udpNetData);
-    ::tcp6NetData = move(tcp6NetData);
-    ::udp6NetData = move(udp6NetData);
+    data.tcpNetData = move(tcpNetData);
+    data.udpNetData = move(udpNetData);
+    data.tcp6NetData = move(tcp6NetData);
+    data.udp6NetData = move(udp6NetData);
 
     netDataMutex.unlock();
 }
