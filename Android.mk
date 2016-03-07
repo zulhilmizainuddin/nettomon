@@ -29,7 +29,8 @@ LOCAL_SRC_FILES :=\
         TransportLayerProcessorFactory.cpp\
         UdpProcessor.cpp
 
-LOCAL_CFLAGS += -O3
+LOCAL_CFLAGS += -O3 -fPIE -pie
+LOCAL_LDFLAGS += -fPIE -pie
 #LOCAL_CFLAGS += -fopenmp
 #LOCAL_LDFLAGS += -fopenmp
 LOCAL_C_INCLUDES := $(LOCAL_PATH) $(LOCAL_PATH)/libpcap
