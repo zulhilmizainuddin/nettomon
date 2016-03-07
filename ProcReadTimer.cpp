@@ -44,13 +44,12 @@ void procRead(const system::error_code &code, asio::deadline_timer *timer, const
     Duration duration;
     duration.start();
 
-    vector<string> socketsInode;
     unordered_map<string, NetData> tcpInodeIp;
     unordered_map<string, NetData> udpInodeIp;
     unordered_map<string, NetData> tcp6InodeIp;
     unordered_map<string, NetData> udp6InodeIp;
 
-    socketsInode = ProcFd(pid).getSocketInodeList();
+    vector<string> socketsInode = ProcFd(pid).getSocketInodeList();
 
     if (!equal(previousSocketsInode.begin(), previousSocketsInode.end(), socketsInode.begin())) {
         #pragma omp parallel sections
